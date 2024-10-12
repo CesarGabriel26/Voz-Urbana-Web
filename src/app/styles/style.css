@@ -1,0 +1,57 @@
+:root, [theme-color=light] {
+    --primary : #0A62AC;
+    --light : white;
+    --dark : black;
+    --text-default : white;
+}
+
+
+/* Cores */
+.primary-bg {
+    background-color: var(--primary) !important;
+}
+.light-bg {
+    background-color: var(--light) !important;
+}
+.dark-bg {
+    background-color: var(--dark) !important;
+}
+
+.primary-text {
+    color: var(--primary)  !important;
+}
+.light-text {
+    color: var(--light) !important;
+}
+.dark-text {
+    color: var(--dark) !important;
+}
+
+
+.primary-border {
+    border-width: 1;
+    border-style: solid;
+    border-color: var(--primary)  !important;
+}
+.light-border {
+    border-width: 1;
+    border-style: solid;
+    border-color: var(--light)  !important;
+}
+.dark-border {
+    border-color: var(--dark) !important;
+}
+
+p, span, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    color: var(--text-default);
+}
+
+/* estilos padrão */
+.bold {
+    font-weight: bolder;
+}
+.sub {
+    font-weight: 300;
+    font-size: 12;
+}
