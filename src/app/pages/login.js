@@ -20,16 +20,6 @@ export default function Login() {
     const [Erro, setErro] = useState("");
     const [Loading, setLoading] = useState(false);
 
-    const [User, setLocalUser] = useState({});
-
-    const checkUser = async () => {
-        let user = localStorage.getItem('usuario') || null;
-        if (user != null) {
-            setLocalUser(user)
-            navigate("/");
-        }
-    };
-
     const checkUserDataRecivedFromSingUp = () => {
         const user = location.state?.user;
         if (user && user.email && user.senha) {
@@ -39,7 +29,6 @@ export default function Login() {
     }
 
     useEffect(checkUserDataRecivedFromSingUp, [location.state?.user])
-    useEffect(()=>{checkUser()});
 
     const Confirmar = async () => {
         clearInterval(interval);
@@ -56,7 +45,6 @@ export default function Login() {
 
             if (!resp.error) {
                 localStorage.setItem('usuario', resp.content);
-                console.log(User);
                 navigate("/");
             } else {
                 setErro(resp.error);
@@ -155,7 +143,7 @@ export default function Login() {
                             <ButtonToolbar>
                                 <Form.ControlLabel className='dark-text sub' >
                                     {Erro? Erro : (
-                                            Loading? (<Loader size="sm" content="Small" />) : null
+                                            Loading? (<Loader size="sm" />) : null
                                         )
                                     }
                                 </Form.ControlLabel>

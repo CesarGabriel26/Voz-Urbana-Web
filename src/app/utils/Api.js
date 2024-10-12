@@ -1,4 +1,4 @@
-const URL = "http://192.168.0.152:5000" //"http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app";
+const URL = "https://voz-urbana-api.vercel.app" //"http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app";
 
 // Funções para Usuários
 export const createUser = async (userData) => {
