@@ -12,6 +12,11 @@ export const createUser = async (userData) => {
     return response.json();
 };
 
+export const getUserById = async (id) => {
+    const response = await fetch(`${URL}/usuarios/get/${id}`);
+    return response.json();
+};
+
 export const loginUser = async (email, password) => {
     const response = await fetch(`${URL}/usuarios/login`, {
         method: 'POST',

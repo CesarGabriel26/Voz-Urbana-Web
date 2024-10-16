@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, ButtonToolbar, Button, Loader } from 'rsuite';
 
-import logo from '../assets/LogoOutile.png';
+import logo from '../../assets/LogoOutile.png';
 
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 
-import { loginUser } from '../utils/Api';
+import { loginUser } from '../../utils/Api';
 
 import { Link, useNavigate, useLocation} from 'react-router-dom';
 

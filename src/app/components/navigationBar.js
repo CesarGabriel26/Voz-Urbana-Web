@@ -26,9 +26,13 @@ export default function NavigationBar() {
                     <Nav className='align-items-sm-center'>
                         <Nav.Link as={Link} to="/" className='light-text'>Inicio</Nav.Link>
                         <Nav.Link as={Link} to="/" className='light-text'>Abaixo Assinados</Nav.Link>
-                        <Nav.Link as={Link} to="/" className='light-text'>Seus abaixo Assinados</Nav.Link>
-                        <Nav.Link as={Link} to="/" className='light-text'>Suas reclamações</Nav.Link>
-                        <Nav.Link as={Link} to="/" className='light-text'>Reclamações locais</Nav.Link>
+                        {
+                            userLogged? (<Nav.Link as={Link} to="/" className='light-text'>Seus abaixo Assinados</Nav.Link>) : null
+                        }
+                        <Nav.Link as={Link} to="/Complaints" className='light-text'>Reclamações locais</Nav.Link>
+                        {
+                            userLogged? (<Nav.Link as={Link} to="/" className='light-text'>Suas reclamações</Nav.Link>) : null
+                        }
                         {/* <Nav.Link eventKey="disabled" disabled className='light-text'>Disabled</Nav.Link> */}
                     </Nav>
                     {

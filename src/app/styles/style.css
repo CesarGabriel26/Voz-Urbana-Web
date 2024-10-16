@@ -62,3 +62,18 @@ p, span, h1, h2, h3, h4, h5, h6, a {
 .dropdown-toggle.nav-link {
     color: var(--light) !important;
 }
+
+.bt-link {
+    transition: .2s ease-in-out;
+}
+.bt-link:hover {
+    opacity: .5;
+}
+.gui-container {
+    display: flex;
+    flex: 1 ;
+    flex-direction: column;
+    padding: 0 36px;
+    width: 100%;
+    max-width: 1320px;
+}

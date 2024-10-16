@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Form, ButtonToolbar, Button, Loader } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
-import logo from '../assets/LogoOutile.png';
+import logo from '../../assets/LogoOutile.png';
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { createUser } from '../utils/Api';
+import { createUser } from '../../utils/Api';
 
 export default function SignUp() {
     const navigate = useNavigate();
