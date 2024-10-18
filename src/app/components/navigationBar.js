@@ -31,7 +31,7 @@ export default function NavigationBar() {
                         }
                         <Nav.Link as={Link} to="/Complaints" className='light-text'>Reclamações locais</Nav.Link>
                         {
-                            userLogged? (<Nav.Link as={Link} to="/" className='light-text'>Suas reclamações</Nav.Link>) : null
+                            userLogged? (<Nav.Link as={Link} to="/User-Complaint" className='light-text'>Suas reclamações</Nav.Link>) : null
                         }
                         {/* <Nav.Link eventKey="disabled" disabled className='light-text'>Disabled</Nav.Link> */}
                     </Nav>
