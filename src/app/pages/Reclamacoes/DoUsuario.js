@@ -3,12 +3,13 @@ import { Container, Header, Content, Footer, Loader, Input } from 'rsuite';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 
-import { listReports } from '../../utils/Api';
+import { getReportsByUser } from '../../utils/Api';
 import NavigationBar from '../../components/navigationBar';
 
 import L from 'leaflet';
 import GeoIcon from '../../assets/GeoIcon.svg';
 import ReportCard from '../../components/ReportCard';
+import DecodeToken from '../../utils/JWT';
 
 const geoIcon = L.icon({
     iconUrl: GeoIcon,
@@ -31,7 +32,9 @@ export default function ReclamacoesDoUsuario() {
     const loadList = async () => {
         try {
             setLoaded(false);
-            let rest = await listReports();
+            let userToken = localStorage.getItem("usuario")
+            let user = DecodeToken(userToken)
+            let rest = await getReportsByUser(user.id);
 
             if (!rest.error) {
                 setComplaints(rest.content);
@@ -71,14 +74,13 @@ export default function ReclamacoesDoUsuario() {
         }
     };
 
-    // Função para filtrar as reclamações com base no termo de pesquisa
-    const handleSearch = (event) => {
-        const term = event.target?.value?.toLowerCase() || '';
-        setSearchTerm(term);
+    const handleSearch = (value) => {
+        const term = value?.toLowerCase() || '';
+        setSearchTerm(value);
 
         const filtered = complaints.filter((complaint) => {
-            const titulo = complaint.titulo?.toLowerCase() || ''; // Verificar se complaint.titulo existe
-            const conteudo = complaint.conteudo?.toLowerCase() || ''; // Verificar se complaint.conteudo existe
+            const titulo = complaint.titulo?.toLowerCase() || '';
+            const conteudo = complaint.conteudo?.toLowerCase() || '';
             return titulo.includes(term) || conteudo.includes(term);
         });
 
@@ -96,14 +98,13 @@ export default function ReclamacoesDoUsuario() {
         }
     }, [position]);
 
-    // Função para atualizar a posição do marcador ao clicar no mapa
     const MapClickHandler = () => {
         useMapEvents({
             click(e) {
-                setPosition([e.latlng.lat, e.latlng.lng]); // Atualiza a posição do marcador para onde o usuário clicou
+                setPosition([e.latlng.lat, e.latlng.lng]);
             }
         });
-        return null; // Não renderiza nenhum componente
+        return null;
     };
 
     return (
@@ -114,12 +115,12 @@ export default function ReclamacoesDoUsuario() {
             <Content style={{ display: 'flex', flexGrow: 1, height: 'calc(100vh - 79px)' }}>
                 {/* Seção de Reclamações */}
                 <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: .5, borderRightColor: 'black', borderRightStyle: 'solid' }}>
-                    <h3 className='primary-text mb-3'>Reclamações Recentes</h3>
+                    <h3 className='primary-text mb-3'>Suas Recentes</h3>
 
                     {/* Barra de pesquisa */}
                     <Input
                         value={searchTerm}
-                        onChange={handleSearch}
+                        onChange={(v) => handleSearch(v)}
                         placeholder="Pesquisar reclamações..."
                         style={{ marginBottom: 15 }}
                     />
@@ -132,6 +133,7 @@ export default function ReclamacoesDoUsuario() {
                                         <ReportCard
                                             key={index}
                                             complaint={complaint}
+                                            searchTerm={searchTerm}
                                             buttons={[
                                                 {
                                                     text: 'Ver no mapa',

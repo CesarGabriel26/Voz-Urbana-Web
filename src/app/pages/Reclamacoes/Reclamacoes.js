@@ -71,19 +71,18 @@ export default function Reclamacoes() {
     }
   };
 
-  // Função para filtrar as reclamações com base no termo de pesquisa
-  const handleSearch = (event) => {
-    const term = event.target?.value?.toLowerCase() || '';
-    setSearchTerm(term);
+  const handleSearch = (value) => {
+    const term = value?.toLowerCase() || '';
+    setSearchTerm(value);
 
     const filtered = complaints.filter((complaint) => {
-      const titulo = complaint.titulo?.toLowerCase() || ''; // Verificar se complaint.titulo existe
-      const conteudo = complaint.conteudo?.toLowerCase() || ''; // Verificar se complaint.conteudo existe
-      return titulo.includes(term) || conteudo.includes(term);
+        const titulo = complaint.titulo?.toLowerCase() || '';
+        const conteudo = complaint.conteudo?.toLowerCase() || '';
+        return titulo.includes(term) || conteudo.includes(term);
     });
 
     setFilteredComplaints(filtered);
-  };
+};
 
   useEffect(() => {
     ObterLocalizacao()
@@ -123,6 +122,7 @@ export default function Reclamacoes() {
                     <ReportCard
                       key={index}
                       complaint={complaint}
+                      searchTerm={searchTerm}
                       buttons={[
                         {
                           text: 'Ver no mapa',
