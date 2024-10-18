@@ -62,8 +62,8 @@ export default function SignUp() {
                 padding: 50
             }}>
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
-                <h1>Seja bem vindo!</h1>
-                <h5>
+                <h1 className='light-text'>Seja bem vindo!</h1>
+                <h5 className='light-text' >
                     Somos uma nova forma de dar voz ao povo em relação aos problemas estruturais de nossas cidades. Buracos na rua, lâmpadas queimadas, terrenos baldios, entre outros problemas finalmente serão comunicados
                     publicamente às autoridades de forma rápida e fácil.
                 </h5>

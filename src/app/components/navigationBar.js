@@ -53,8 +53,11 @@ export default function NavigationBar() {
                                     Something
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item >
-                                    Separated link
+                                <NavDropdown.Item onClick={()=>{
+                                    localStorage.removeItem('usuario');
+                                    window.location.reload();
+                                }} >
+                                    Sair
                                 </NavDropdown.Item>
                             </NavDropdown>
                         )

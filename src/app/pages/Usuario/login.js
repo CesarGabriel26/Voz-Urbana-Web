@@ -83,8 +83,8 @@ export default function Login() {
 
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
 
-                <h1>Seja bem vindo!</h1>
-                <h5>
+                <h1 className='light-text'>Seja bem vindo!</h1>
+                <h5 className='light-text'>
                     Acesse sua conta de modo fácil
                     para poder aproveitar dos nossos
                     serviços!
