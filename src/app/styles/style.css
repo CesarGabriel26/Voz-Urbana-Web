@@ -3,8 +3,12 @@
     --light : white;
     --dark : black;
     --text-default : white;
+    --place-holder-color : #c5c5c5;
 }
 
+.rs-form-control {
+    display: flex !important;
+}
 
 /* Cores */
 .primary-bg {
@@ -25,6 +29,9 @@
 }
 .dark-text {
     color: var(--dark) !important;
+}
+.place-text {
+    color: var(--place-holder-color) !important;
 }
 
 

@@ -23,7 +23,7 @@ export default function ReclamacoesDoUsuario() {
 
     const [complaints, setComplaints] = useState([]);
     const [filteredComplaints, setFilteredComplaints] = useState([]);
-    const [position, setPosition] = useState(null); // posição do único marcador
+    const [position, setPosition] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [loaded, setLoaded] = useState(false);
 
@@ -32,6 +32,7 @@ export default function ReclamacoesDoUsuario() {
     const loadList = async () => {
         try {
             setLoaded(false);
+            // PELO AMOR DE DEUS: USAR PARA PEGAR AS INFORMAÇÕES DO USUÁRIO
             let userToken = localStorage.getItem("usuario")
             let user = DecodeToken(userToken)
             let rest = await getReportsByUser(user.id);
@@ -113,7 +114,6 @@ export default function ReclamacoesDoUsuario() {
                 <NavigationBar />
             </Header>
             <Content style={{ display: 'flex', flexGrow: 1, height: 'calc(100vh - 79px)' }}>
-                {/* Seção de Reclamações */}
                 <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: .5, borderRightColor: 'black', borderRightStyle: 'solid' }}>
                     <h3 className='primary-text mb-3'>Suas Recentes</h3>
 
@@ -148,7 +148,6 @@ export default function ReclamacoesDoUsuario() {
                     </div>
                 </section>
 
-                {/* Seção do Mapa */}
                 <section style={{ flex: 1, borderLeftWidth: .5, borderLeftColor: 'black', borderLeftStyle: 'solid' }}>
                     {
                         position ? (
@@ -157,7 +156,7 @@ export default function ReclamacoesDoUsuario() {
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                 />
-                                <MapClickHandler /> {/* Componente para lidar com cliques no mapa */}
+                                <MapClickHandler />
                                 <Marker position={position} icon={geoIcon}>
                                     <Popup>
                                         Sua localização

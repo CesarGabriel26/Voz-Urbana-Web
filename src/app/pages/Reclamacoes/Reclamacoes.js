@@ -91,7 +91,7 @@ export default function Reclamacoes() {
 
   useEffect(() => {
     if (mapRef.current && position) {
-      mapRef.current.flyTo(position, 13);
+      mapRef.current.flyTo(position, 18);
     }
   }, [position]);
 
@@ -141,7 +141,7 @@ export default function Reclamacoes() {
         <section style={{ flex: 1, borderLeftWidth: .5, borderLeftColor: 'black', borderLeftStyle: 'solid' }}>
           {
             position ? (
-              <MapContainer center={position} zoom={13} style={{ width: '100%', height: '100%' }} ref={mapRef} >
+              <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }} ref={mapRef} >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
