@@ -1,36 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Container, Header, Content, Footer, Form, Input } from 'rsuite';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button } from 'rsuite';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { useLocation } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import L from 'leaflet';
 
-import { getReportsByUser } from '../../utils/Api';
-import NavigationBar from '../../components/navigationBar';
+import { getLatLongFromAddress } from '../../utils/LatLong';
+import BaseContainer from '../../components/BaseContainer';
 
-import GeoIcon from '../../assets/GeoIcon.svg';
-import ReportCard from '../../components/ReportCard';
-import DecodeToken from '../../utils/JWT';
 
-const geoIcon = L.icon({
-    iconUrl: GeoIcon,
-    iconSize: [38, 38],
-    iconAnchor: [22, 94],
-    popupAnchor: [-3, -76]
-});
-
+L.Icon.Default.imagePath = 'leaflet/dist/images/';
+// componente customizado de are de texto
+const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
 export default function NovaReclamação() {
     const location = useLocation();
 
     const [image, setImage] = useState(null);
     const [position, setPosition] = useState(null);
-    const [loaded, setLoaded] = useState(false);
+    // const [loaded, setLoaded] = useState(false);
 
-    const mapRef = useRef();
-
-    // componente customizado de are de texto
-    const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
+    const [formData, setFormData] = useState({
+        titulo: '',
+        problema: '',
+        image: null,
+        numero: '',
+        rua: '',
+        cidade: '',
+        estado: '',
+        cep: '',
+        pais: '',
+    });
 
     const ObterLocalizacao = () => {
         let complaintLocation = location.state?.local;
@@ -64,6 +64,7 @@ export default function NovaReclamação() {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImage(reader.result);
+                handleChange('image', reader.result)
             };
             reader.readAsDataURL(file);
         }
@@ -78,14 +79,9 @@ export default function NovaReclamação() {
         ObterLocalizacao();
     }, []);
 
-    useEffect(() => {
-        if (mapRef.current && position) {
-            mapRef.current.flyTo(position, 13);
-        }
-    }, [position]);
 
     const MapClickHandler = () => {
-        useMapEvents({
+        useMapEvent({
             click(e) {
                 setPosition([e.latlng.lat, e.latlng.lng]);
             }
@@ -93,90 +89,225 @@ export default function NovaReclamação() {
         return null;
     };
 
+    const handleSubmit = async () => {
+        try {
+            // Cria um FormData para enviar a imagem junto com outros dados
+            const formToSend = {
+                'titulo': formData.titulo,
+                'problema': formData.problema,
+                'numero': formData.numero,
+                'rua': formData.rua,
+                'cidade': formData.cidade,
+                'estado': formData.estado,
+                'cep': formData.cep,
+                'pais': formData.pais,
+                'image': image
+            }
+
+            console.log(formToSend);
+
+            let resp = await getLatLongFromAddress(formData.rua, formData.numero, formData.cidade, formData.estado, formData.pais)
+            console.log(resp);
+            setPosition([resp.latitude, resp.longitude]);
+
+
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+        }
+    };
+    const handleChange = (field, value) => {
+        setFormData(prevData => ({
+            ...prevData,
+            [field]: value
+        }));
+    };
+
     return (
-        <Container style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Header style={{ top: 0, width: '100%', zIndex: 1000 }}>
-                <NavigationBar />
-            </Header>
-            <Content style={{ display: 'flex', flexGrow: 1 }}>
-                <section style={{ padding: 25, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <BaseContainer>
+            <Form
+                onSubmit={handleSubmit}
+                className='d-block d-md-flex'
+                style={{ flex: 1, margin: 0 }}
+            >
+                <section
+                    style={{ padding: 25, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
+                >
                     <h3 className='primary-text mb-3'>Crie uma nova reclamação</h3>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <Form style={{ flex: 1, width: '100%' }}>
-                            <Form.Group controlId="titulo" style={{ flex: 1, width: '100%' }}>
-                                <Form.ControlLabel className='primary-text bold fs-5'>Título</Form.ControlLabel>
-                                <Form.Control
-                                    name="titulo"
-                                    style={{ borderWidth: 4, width: '100%' }}
-                                    className="primary-border dark-text fs-5"
-                                />
-                                <Form.HelpText>Uma descrição curta que indique seu problema</Form.HelpText>
-                            </Form.Group>
+                    <div style={{ flex: 1, width: '100%' }}>
+                        <Form.Group controlId="titulo" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='primary-text bold fs-5'>Título</Form.ControlLabel>
+                            <Form.Control
+                                name="titulo"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="primary-border dark-text fs-5"
+                                value={formData.titulo}
+                                onChange={(value) => handleChange('titulo', value)}
+                            />
+                            <Form.HelpText>Uma descrição curta que indique seu problema</Form.HelpText>
+                        </Form.Group>
 
-                            <Form.Group controlId="Problema" style={{ flex: 1, width: '100%' }}>
-                                <Form.ControlLabel className="primary-text bold fs-5">Informe o seu problema</Form.ControlLabel>
-                                <Form.Control
-                                    className="primary-border dark-text fs-5"
-                                    rows={5}
-                                    name="Problema"
-                                    accepter={Textarea}
-                                    style={{ resize: 'none', borderWidth: 4, width: '100%' }}
-                                />
-                                <Form.HelpText>Uma descrição completa sobre o problema</Form.HelpText>
-                            </Form.Group>
+                        <Form.Group controlId="problema" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className="primary-text bold fs-5">Informe o seu problema</Form.ControlLabel>
+                            <Form.Control
+                                className="primary-border dark-text fs-5"
+                                rows={5}
+                                name="problema"
+                                accepter={Textarea}
+                                value={formData.problema}
+                                onChange={(value) => handleChange('problema', value)} // use o value diretamente
+                                style={{ resize: 'none', borderWidth: 4, width: '100%' }}
+                            />
+                        </Form.Group>
 
-                            <Form.Group controlId="image" style={{ flex: 1, width: '100%' }}>
-                                <Form.ControlLabel className='primary-text bold fs-5'>
-                                    Carregue uma imagem do Local e/ou problema
-                                </Form.ControlLabel>
+                        <Form.Group controlId="image" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='primary-text bold fs-5'>
+                                Carregue uma imagem do Local e/ou problema
+                            </Form.ControlLabel>
 
-                                <div {...getRootProps()} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
-                                    <input {...getInputProps()} />
-                                    {image ? (
-                                        <img
-                                            src={image}
-                                            className='primary-border'
-                                            alt="Imagem selecionada"
-                                            style={{ width: "100%", height: 300, objectFit: 'cover', borderRadius: 10, borderWidth: 4 }}
-                                        />
-                                    ) : (
-                                        <img
-                                            src="https://via.placeholder.com/200"
-                                            className='primary-border'
-                                            alt="Clique para selecionar uma imagem"
-                                            style={{ width: 200, height: 200, objectFit: 'cover', borderRadius: 10, borderWidth: 4 }}
-                                        />
-                                    )}
-                                </div>
+                            <div {...getRootProps()} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
+                                <input {...getInputProps()} />
+                                {image ? (
+                                    <img
+                                        src={image}
+                                        className='primary-border'
+                                        alt="Imagem selecionada"
+                                        style={{ width: "100%", height: 300, objectFit: 'cover', borderRadius: 10, borderWidth: 4 }}
+                                    />
+                                ) : (
+                                    <img
+                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRNOkaLzIY09eCBjECGIoc8BFWmxw-mvTfDg&s"
+                                        className='primary-border'
+                                        alt="Clique para selecionar uma imagem"
+                                        style={{ width: "100%", height: 300, objectFit: 'cover', borderRadius: 10, borderWidth: 4 }}
+                                    />
+                                )}
+                            </div>
 
-                                <Form.HelpText>Selecione uma imagem da galeria ou tire uma foto.</Form.HelpText>
-                            </Form.Group>
-                        </Form>
+                            <Form.HelpText>Selecione uma imagem da galeria ou tire uma foto.</Form.HelpText>
+                        </Form.Group>
                     </div>
                 </section>
 
                 <section
-                    className='d-none d-md-flex'
-                    style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: 'green' }}
+                    style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
                 >
                     <h3 className='primary-text mb-3'>Informações do local</h3>
 
-                    <Form>
-                        <Form.Group controlId="textarea">
-                            <Form.ControlLabel>Textarea</Form.ControlLabel>
-                            <Form.Control
-                                className='primary-border'
-                                rows={10}
-                                name="textarea"
-                                accepter={Textarea}
-                                style={{ resize: 'none', borderWidth: 4 }}
-                            />
-                        </Form.Group>
-                    </Form>
+                    <div style={{ width: "100%", height: 300 }} >
+                        {
+                            position ? (
+                                <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }}>
+                                    <TileLayer
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    />
+                                    <MapClickHandler />
+                                    <Marker position={position}>
+                                        <Popup>
+                                            Sua localização
+                                        </Popup>
+                                    </Marker>
+                                </MapContainer>
+                            ) : (
+                                <div style={{ width: '100%', height: '100%', display: "flex", justifyContent: 'center', alignItems: 'center' }}>
+                                    <p className='dark-text'>
+                                        Algo deu errado, verifique a permição de geolocalização, caso já tenha permitido recarregue a página.
+                                    </p>
+                                </div>
+                            )
+                        }
+                    </div>
+
+                    <div style={{ flex: 1, width: '100%' }}>
+                        <div className='d-block d-md-flex'>
+                            <Form.Group className='m-0 me-md-2' controlId="numero" style={{ flex: 1, width: '100%' }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>Número</Form.ControlLabel>
+                                <Form.Control
+                                    name="numero"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.numero}
+                                    onChange={(value) => handleChange('numero', value)}
+                                />
+                                <Form.HelpText>O número da casa ou prédio (opicional)</Form.HelpText>
+                            </Form.Group>
+                            <Form.Group className='m-0 ms-md-2' controlId="rua" style={{ flex: 1 }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>Rua</Form.ControlLabel>
+                                <Form.Control
+                                    name="rua"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.rua}
+                                    onChange={(value) => handleChange('rua', value)}
+                                />
+                                <Form.HelpText>A rua onde o problema se encontra</Form.HelpText>
+                            </Form.Group>
+                        </div>
+
+                        <div className='d-block d-md-flex'>
+                            <Form.Group className='m-0 me-md-2' controlId="cidade" style={{ flex: 1, width: '100%' }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>Cidade</Form.ControlLabel>
+                                <Form.Control
+                                    name="cidade"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.cidade}
+                                    onChange={(value) => handleChange('cidade', value)}
+                                />
+                                <Form.HelpText>A cidade onde o problema se encontra</Form.HelpText>
+                            </Form.Group>
+
+                            <Form.Group className='m-0 ms-md-2' controlId="estado" style={{ flex: 1, width: '100%' }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>Estado</Form.ControlLabel>
+                                <Form.Control
+                                    name="estado"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.estado}
+                                    onChange={(value) => handleChange('estado', value)}
+                                />
+                                <Form.HelpText>O estado onde o problema se encontra</Form.HelpText>
+                            </Form.Group>
+                        </div>
+
+                        <div className='d-block d-md-flex'>
+                            <Form.Group className='m-0 me-md-2' controlId="cep" style={{ flex: 1, width: '100%' }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>CEP</Form.ControlLabel>
+                                <Form.Control
+                                    name="cep"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.cep}
+                                    onChange={(value) => handleChange('cep', value)}
+                                />
+                                <Form.HelpText>O CEP da área</Form.HelpText>
+                            </Form.Group>
+
+                            <Form.Group className='m-0 ms-md-2' controlId="pais" style={{ flex: 1, width: '100%' }}>
+                                <Form.ControlLabel className='primary-text bold fs-5'>País</Form.ControlLabel>
+                                <Form.Control
+                                    name="pais"
+                                    style={{ borderWidth: 4, flex: 1 }}
+                                    className="primary-border dark-text fs-5"
+                                    value={formData.pais}
+                                    onChange={(value) => handleChange('pais', value)}
+                                />
+                                <Form.HelpText>O país onde o problema se encontra</Form.HelpText>
+                            </Form.Group>
+                        </div>
+
+                        <div className='d-block d-md-flex'>
+                            <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
+                                <Button
+                                    className='primary-bg light-text bold fs-3 p-3' style={{ borderWidth: 2 }}
+                                    type='submit'
+                                >Enviar Reclamação</Button>
+                            </Form.Group>
+                        </div>
+                    </div>
                 </section>
-            </Content>
-            <Footer></Footer>
-        </Container>
+            </Form>
+        </BaseContainer>
     );
 }

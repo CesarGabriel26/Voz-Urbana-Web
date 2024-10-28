@@ -6,7 +6,6 @@ import { Highlight } from 'rsuite';
 
 const styles = {
     card: {
-        minWidth: '400',
         padding: 10,
         borderRadius: 20,
         marginBottom: 10
@@ -33,23 +32,25 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
             <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }} >
                 <p style={styles.cardText}> {formatDate(complaint.data, true)}</p>
                 <div style={{ display: 'flex', alignItems: "center" }} >
-                    {
-                        buttons?.map((btn, index) => (
-                            <>
-                                <p
-                                    key={index}
-                                    className='text-light bt-link' style={{
-                                        margin: 5,
-                                        cursor: 'pointer'
-                                    }}
-                                    onClick={btn.onclick}
-                                >
-                                    {btn.text}
-                                </p>
-                                <spam className='text-light'>|</spam>
-                            </>
-                        ))
-                    }
+                    <div className='d-none d-md-flex' style={{ alignItems: "center" }} >
+                        {
+                            buttons?.map((btn, index) => (
+                                <>
+                                    <p
+                                        key={index}
+                                        className='text-light bt-link' style={{
+                                            margin: 5,
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={btn.onclick}
+                                    >
+                                        {btn.text}
+                                    </p>
+                                    <spam className='text-light'>|</spam>
+                                </>
+                            ))
+                        }
+                    </div>
                     {
                         buttonsOptions?.hasDefault === false ? null : (
                             <p
