@@ -5,17 +5,8 @@ import { useLocation } from 'react-router-dom';
 
 import { listReports } from '../../utils/Api';
 
-import L from 'leaflet';
-import GeoIcon from '../../assets/GeoIcon.svg';
 import ReportCard from '../../components/ReportCard';
 import BaseContainer from '../../components/BaseContainer';
-
-const geoIcon = L.icon({
-  iconUrl: GeoIcon,
-  iconSize: [38, 38],
-  iconAnchor: [22, 94],
-  popupAnchor: [-3, -76]
-});
 
 export default function Reclamacoes() {
   const location = useLocation();
@@ -98,8 +89,8 @@ export default function Reclamacoes() {
   return (
     <BaseContainer flex={true} footer={false}  >
       {/* Seção de Reclamações */}
-      <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: .5, borderRightColor: 'black', borderRightStyle: 'solid' }}>
-        <h3 className='primary-text mb-3'>Reclamações Recentes</h3>
+      <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }} className='border-primary'>
+        <h3 className='text-primary mb-3'>Reclamações Recentes</h3>
 
         {/* Barra de pesquisa */}
         <Input
@@ -134,7 +125,7 @@ export default function Reclamacoes() {
       </section>
 
       {/* Seção do Mapa */}
-      <section className='d-none d-md-block' style={{ flex: 1, borderLeftWidth: .5, borderLeftColor: 'black', borderLeftStyle: 'solid' }}>
+      <section className='d-none d-md-block border-primary' style={{ flex: 1, borderLeftWidth: 2, borderLeftStyle: 'solid' }}>
         {
           position ? (
             <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }} ref={mapRef} >
@@ -144,7 +135,7 @@ export default function Reclamacoes() {
               />
               {
                 loaded && filteredComplaints.map((complaint, index) => (
-                  <Marker key={index} position={[complaint.latitude, complaint.longitude]} icon={geoIcon}>
+                  <Marker key={index} position={[complaint.latitude, complaint.longitude]}>
                     <Popup>
                       {complaint.titulo}
                     </Popup>

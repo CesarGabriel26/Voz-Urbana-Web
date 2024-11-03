@@ -70,7 +70,7 @@ export default function Login() {
             height: '100vh',
         }} >
 
-            <div className='primary-bg' style={{
+            <div className='bg-primary' style={{
                 display: 'flex',
                 flexDirection: 'column',
                 width: '50%',
@@ -83,8 +83,8 @@ export default function Login() {
 
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
 
-                <h1 className='light-text'>Seja bem vindo!</h1>
-                <h5 className='light-text'>
+                <h1 className='text-light'>Seja bem vindo!</h1>
+                <h5 className='text-light'>
                     Acesse sua conta de modo fácil
                     para poder aproveitar dos nossos
                     serviços!
@@ -102,7 +102,7 @@ export default function Login() {
                 padding: 50
             }} >
                 <div
-                    className='primary-border'
+                    className='border-primary'
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -113,7 +113,8 @@ export default function Login() {
                         paddingTop: 25,
                         paddingBottom: 25,
                         borderRadius: 10,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        borderStyle: 'solid'
                     }}
                 >
                     <Form fluid={true}>
@@ -129,8 +130,8 @@ export default function Login() {
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
                             <ButtonToolbar>
-                                <Button className='primary-border light-bg bold' style={{ borderWidth: 2 }} ><p className='primary-text' >Login com <FaGoogle /></p></Button>
-                                <Button className='primary-border light-bg bold' style={{ borderWidth: 2 }} ><p className='primary-text' >Login com <FaFacebook /></p></Button>
+                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></Button>
+                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></Button>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'center' }} >
@@ -150,8 +151,8 @@ export default function Login() {
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <Button className='primary-bg light-text bold' style={{ borderWidth: 2 }} onClick={Confirmar} >Entrar</Button>
-                            <Button onClick={() => navigate(-1)} className='primary-bg light-text bold' style={{ borderWidth: 2 }} >Voltar</Button>
+                            <Button className='btn btn-primary' onClick={Confirmar} >Entrar</Button>
+                            <Button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</Button>
                         </Form.Group>
                     </Form>
                 </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Header, Content, Footer } from 'rsuite';
 import NavigationBar from '../components/navigationBar';
 
-export default function BaseContainer({ children, flex = false, footer = true }) {
+export default function BaseContainer({ children, flex = false, footer = true, style }) {
     const [isSticky, setIsSticky] = useState(false);
 
     const handleScroll = () => {
@@ -29,8 +29,10 @@ export default function BaseContainer({ children, flex = false, footer = true })
                 <NavigationBar />
             </Header>
 
-            <Content style={{ paddingTop: isSticky ? 80 : 0, display: flex ? 'flex' : '' }}>
-                {children}
+            <Content style={{ paddingTop: isSticky ? 80 : 0, display: 'flex'}}>
+                <div style={{...style, display: flex ? 'flex' : '', flex: 1}}>
+                    {children}
+                </div>
             </Content>
 
             {

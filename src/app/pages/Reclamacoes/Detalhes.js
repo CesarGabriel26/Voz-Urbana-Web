@@ -38,7 +38,7 @@ export default function DetalhesReclamacao() {
     }, []);
 
     return (
-        <BaseContainer>
+        <BaseContainer style={{ paddingTop: 10 }} footer={false} >
             {loaded ? (
                 <FlexboxGrid justify="center">
                     <FlexboxGrid.Item colspan={16}>

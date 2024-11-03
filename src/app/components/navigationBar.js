@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Avatar } from 'rsuite'
+import { Link } from 'react-router-dom';
 
 import logo from '../assets/LogoOutile.png';
+import DecodeToken from '../utils/JWT';
 
 export default function NavigationBar() {
     const [userLogged, setUserLogged] = useState(false)
+    const [User, setUser] = useState({})
 
     const checkUser = async () => {
         let user = localStorage.getItem('usuario') || null;
+        if (user) {
+            let us = DecodeToken(user)
+            setUser(us)
+        }
+
         setUserLogged(user != null)
     };
-    useEffect(() => { checkUser() });
+
+    useEffect(() => { checkUser() }, []);
 
     return (
 
-        <Navbar collapseOnSelect expand="sm" className='primary-bg' style={{ paddingLeft: 25, paddingRight: 25 }}>
+        <Navbar collapseOnSelect expand="sm" className='bg-primary' style={{ paddingLeft: 25, paddingRight: 25 }}>
             <Navbar.Toggle aria-controls="navBar" data-bs-target="#navBar" />
-            <Navbar.Brand className='light-text'>
+            <Navbar.Brand className='text-light'>
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 50, height: 50, marginRight: 10 }} />
                 Voz Urbana
             </Navbar.Brand>
             <Navbar.Collapse id="navBar">
                 <Nav style={{ display: 'flex', justifyContent: 'space-between', flex: 1 }} className='d-block d-sm-flex'>
                     <Nav className='align-items-sm-center'>
-                        <Nav.Link as={Link} to="/" className='light-text'>Inicio</Nav.Link>
+                        <Nav.Link as={Link} to="/" className='text-light'>Inicio</Nav.Link>
                         {
                             /* 
                                 <Nav.Link as={Link} to="/" className='light-text'>Abaixo Assinados</Nav.Link>
@@ -39,7 +48,7 @@ export default function NavigationBar() {
                             */
                         }
 
-                        <NavDropdown title="Abaixo Assinados" style={{ marginLeft: 5 }} className='light-text' >
+                        <NavDropdown title="Abaixo Assinados" style={{ marginLeft: 5 }} className='text-light' >
                             <NavDropdown.Item as={Link} to="/Abaixo-Assinados">
                                 Abaixo Assinados
                             </NavDropdown.Item>
@@ -47,20 +56,23 @@ export default function NavigationBar() {
                                 userLogged ? (
                                     <>
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item as={Link} to="/">
+                                        <NavDropdown.Item as={Link} to="/Novo-Abaixo-Assinado">
                                             Novo abaixo assinado
                                         </NavDropdown.Item>
 
                                         <NavDropdown.Divider />
-                                        <NavDropdown.Item as={Link} to="/">
+                                        <NavDropdown.Item as={Link} to="/Abaixo-Assinados-Do-Usuario">
                                             Meus abaixo ssinados
                                         </NavDropdown.Item>
+                                        {/* 
+                                            /Abaixo-Assinados-Detalhes
+                                        */}
                                     </>
                                 ) : null
                             }
                         </NavDropdown>
 
-                        <NavDropdown title="Reclamações" style={{ marginLeft: 5 }} className='light-text' >
+                        <NavDropdown title="Reclamações" style={{ marginLeft: 5 }} className='text-light' >
                             <NavDropdown.Item as={Link} to="/Complaints">
                                 Reclamações locais
                             </NavDropdown.Item>
@@ -74,7 +86,7 @@ export default function NavigationBar() {
 
                                         <NavDropdown.Divider />
                                         <NavDropdown.Item as={Link} to="/User-Complaint">
-                                            Suas reclamações
+                                            MInhas reclamações
                                         </NavDropdown.Item>
                                     </>
                                 ) : null
@@ -84,19 +96,24 @@ export default function NavigationBar() {
                     {
                         !userLogged ? (
                             <Nav className='align-items-sm-center'>
-                                <Nav.Link as={Link} to="/LogIn" className='light-text'>LogIn</Nav.Link>
-                                <Nav.Link as={Link} to="/SignUp" className='light-text'>SignUp</Nav.Link>
+                                <Nav.Link as={Link} to="/LogIn" className='text-light'>LogIn</Nav.Link>
+                                <Nav.Link as={Link} to="/SignUp" className='text-light'>SignUp</Nav.Link>
                             </Nav>
                         ) : (
-                            <NavDropdown title="Configurações" style={{ marginRight: 50 }} className='light-text' >
+                            <NavDropdown
+                                title={
+                                    <Avatar
+                                        src={User.pfp}
+                                        size="lg"
+                                        circle
+                                        alt='User Profile'
+                                    />
+                                }
+                                style={{ marginRight: 50 }}
+                                className='light-text custom-dropdown d-none d-md-block'
+                            >
                                 <NavDropdown.Item href="#action/3.1">
-                                    Action
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">
-                                    Another action
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">
-                                    Something
+                                    Perfil
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={() => {

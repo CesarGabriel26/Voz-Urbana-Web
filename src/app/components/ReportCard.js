@@ -28,9 +28,9 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
     const navigate = useNavigate();
 
     return (
-        <div className='primary-bg' style={styles.card}>
+        <div className='bg-primary' style={styles.card}>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }} >
-                <p style={styles.cardText}> {formatDate(complaint.data, true)}</p>
+                <p className='text-light' style={styles.cardText}> {formatDate(complaint.data, true)}</p>
                 <div style={{ display: 'flex', alignItems: "center" }} >
                     <div className='d-none d-md-flex' style={{ alignItems: "center" }} >
                         {
@@ -69,7 +69,7 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
                     }
                 </div>
             </div>
-            <div style={styles.cardBody} className='light-bg' >
+            <div style={styles.cardBody} className='bg-body' >
                 <Highlight query={searchTerm}>
                     <p
                         className='dark-text'

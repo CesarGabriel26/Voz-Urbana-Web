@@ -116,6 +116,11 @@ export const getPetitionById = async (id) => {
     return response.json();
 };
 
+export const getRemainingTimeForPetition = async (id) => {
+    const response = await fetch(`${URL}/peticoes/check_timer/${id}`);
+    return response.json();
+};
+
 export const getPetitionsByUser = async (userId) => {
     const response = await fetch(`${URL}/peticoes/get_by_user/${userId}`);
     return response.json();

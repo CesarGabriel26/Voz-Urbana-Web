@@ -1,0 +1,23 @@
+/* navigation.css */
+.nav-link.disabled, .nav-link:disabled {
+    opacity: .3 !important; 
+}
+
+.dropdown-toggle.nav-link {
+    color: var(--light) !important;
+}
+
+.bt-link {
+    transition: .2s ease-in-out;
+}
+.bt-link:hover {
+    opacity: .5;
+}
+
+.custom-dropdown .dropdown-toggle::after {
+    display: none;
+}
+
+.custom-dropdown .dropdown-menu {
+    left: -20px !important;
+}

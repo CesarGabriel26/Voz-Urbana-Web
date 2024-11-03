@@ -8,7 +8,7 @@ import { createUser } from '../../utils/Api';
 
 export default function SignUp() {
     const navigate = useNavigate();
-    
+
     // Estados para os campos do formulário
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -37,11 +37,11 @@ export default function SignUp() {
         }
         const response = await createUser(user);
         setLoading(false);
-        
+
         if (response.error) {
             setErro(response.error);
         } else {
-            navigate("/login", {state: { user: response.content}});
+            navigate("/login", { state: { user: response.content } });
         }
     };
 
@@ -51,7 +51,7 @@ export default function SignUp() {
             width: '100%',
             height: '100vh',
         }}>
-            <div className='primary-bg' style={{
+            <div className='bg-primary' style={{
                 display: 'flex',
                 flexDirection: 'column',
                 width: '50%',
@@ -62,8 +62,8 @@ export default function SignUp() {
                 padding: 50
             }}>
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
-                <h1 className='light-text'>Seja bem vindo!</h1>
-                <h5 className='light-text' >
+                <h1 className='text-light'>Seja bem vindo!</h1>
+                <h5 className='text-light' >
                     Somos uma nova forma de dar voz ao povo em relação aos problemas estruturais de nossas cidades. Buracos na rua, lâmpadas queimadas, terrenos baldios, entre outros problemas finalmente serão comunicados
                     publicamente às autoridades de forma rápida e fácil.
                 </h5>
@@ -79,7 +79,7 @@ export default function SignUp() {
                 padding: 50
             }}>
                 <div
-                    className='primary-border'
+                    className='border-primary'
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -90,7 +90,8 @@ export default function SignUp() {
                         paddingTop: 25,
                         paddingBottom: 25,
                         borderRadius: 10,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        borderStyle: 'solid'
                     }}
                 >
                     <Form fluid={true} onSubmit={handleSubmit}>
@@ -162,13 +163,13 @@ export default function SignUp() {
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
                             <ButtonToolbar>
-                                <Button className='primary-border light-bg bold' style={{ borderWidth: 2 }} ><p className='primary-text'>Login com <FaGoogle /></p></Button>
-                                <Button className='primary-border light-bg bold' style={{ borderWidth: 2 }} ><p className='primary-text'>Login com <FaFacebook /></p></Button>
+                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></Button>
+                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></Button>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <Button className='primary-bg light-text bold' style={{ borderWidth: 2 }} type="submit">Criar usuário</Button>
-                            <Button onClick={() => navigate(-1)} className='primary-bg light-text bold' style={{ borderWidth: 2 }} >Voltar</Button>
+                            <Button className='btn btn-primary' type="submit">Criar usuário</Button>
+                            <Button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</Button>
                         </Form.Group>
                     </Form>
                 </div>

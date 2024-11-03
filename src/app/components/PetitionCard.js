@@ -24,26 +24,57 @@ const styles = {
 }
 
 
-export default function PetitionCard({ abaixoAssinado }) {
+export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, buttonsOptions }) {
+
     return (
-        <div className='primary-bg' style={styles.card}>
+        <div className='bg-primary' style={styles.card}>
             <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }} >
-                <p style={styles.cardText}>
+                <p className='text-light' style={styles.cardText}>
                     {formatDate(abaixoAssinado.data)}
                 </p>
-                <p
-                    className='text-light bt-link' style={{
-                        margin: 5,
-                        cursor: 'pointer'
-                    }}
-                    onClick={() => {
-                        console.log(abaixoAssinado.id);
-                    }}
-                >
-                    Ver mais <FaCaretRight />
-                </p>
+                <div style={{ display: 'flex' }}>
+                    <div className='d-none d-md-flex' style={{ alignItems: "center" }} >
+                        {
+                            buttons?.map((btn, index) => (
+                                <>
+                                    <p
+                                        key={index}
+                                        className='text-light bt-link' style={{
+                                            margin: 5,
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={btn.onclick}
+                                    >
+                                        {btn.text}
+                                    </p>
+                                    {
+                                        (buttonsOptions?.hasDefault === false && index < buttons.length - 1) || buttonsOptions?.hasDefault !== false
+                                        ? <span className='text-light'>|</span>
+                                        : null
+                                    }
+
+                                </>
+                            ))
+                        }
+                    </div>
+                    {
+                        buttonsOptions?.hasDefault === false ? null : (
+                            <p
+                                className='text-light bt-link' style={{
+                                    margin: 5,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    console.log(abaixoAssinado.id);
+                                }}
+                            >
+                                Ver mais <FaCaretRight />
+                            </p>
+                        )
+                    }
+                </div>
             </div>
-            <div className='light-bg' style={styles.cardBody}>
+            <div className='bg-body' style={styles.cardBody}>
                 <p className='dark-text' style={{
                     maxHeight: 150,
                     overflow: 'hidden',
@@ -81,7 +112,6 @@ export default function PetitionCard({ abaixoAssinado }) {
                         percent={abaixoAssinado.signatures / abaixoAssinado.required_signatures}
                         borderRadius={20}
                         color={"red"}
-                        animationType='decay'
                         showInfo={false}
                         style={{ margin: 0, padding: 0, width: 250 }}
                     />

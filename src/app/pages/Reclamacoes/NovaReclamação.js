@@ -123,16 +123,20 @@ export default function NovaReclamação() {
     };
 
     return (
-        <BaseContainer>
+        <BaseContainer
+            footer={false}
+            flex={true}
+        >
             <Form
                 onSubmit={handleSubmit}
                 className='d-block d-md-flex'
                 style={{ flex: 1, margin: 0 }}
             >
                 <section
-                    style={{ padding: 25, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
+                    style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
+                    className='border-primary'
                 >
-                    <h3 className='primary-text mb-3'>Crie uma nova reclamação</h3>
+                    <h3 className='text-primary mb-3'>Crie uma nova reclamação</h3>
 
                     <div style={{ flex: 1, width: '100%' }}>
                         <Form.Group controlId="titulo" style={{ flex: 1, width: '100%' }}>
@@ -190,7 +194,8 @@ export default function NovaReclamação() {
                 </section>
 
                 <section
-                    style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
+                    style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderLeftWidth: 2, borderLeftStyle: 'solid' }}
+                    className='border-primary'
                 >
                     <h3 className='primary-text mb-3'>Informações do local</h3>
 
@@ -240,6 +245,8 @@ export default function NovaReclamação() {
                                     className="primary-border dark-text fs-5"
                                     value={formData.rua}
                                     onChange={(value) => handleChange('rua', value)}
+                                    required
+
                                 />
                                 <Form.HelpText>A rua onde o problema se encontra</Form.HelpText>
                             </Form.Group>
@@ -254,6 +261,7 @@ export default function NovaReclamação() {
                                     className="primary-border dark-text fs-5"
                                     value={formData.cidade}
                                     onChange={(value) => handleChange('cidade', value)}
+                                    required
                                 />
                                 <Form.HelpText>A cidade onde o problema se encontra</Form.HelpText>
                             </Form.Group>
@@ -266,6 +274,7 @@ export default function NovaReclamação() {
                                     className="primary-border dark-text fs-5"
                                     value={formData.estado}
                                     onChange={(value) => handleChange('estado', value)}
+                                    required
                                 />
                                 <Form.HelpText>O estado onde o problema se encontra</Form.HelpText>
                             </Form.Group>
@@ -281,7 +290,7 @@ export default function NovaReclamação() {
                                     value={formData.cep}
                                     onChange={(value) => handleChange('cep', value)}
                                 />
-                                <Form.HelpText>O CEP da área</Form.HelpText>
+                                <Form.HelpText>O CEP da área (opicional)</Form.HelpText>
                             </Form.Group>
 
                             <Form.Group className='m-0 ms-md-2' controlId="pais" style={{ flex: 1, width: '100%' }}>
@@ -292,6 +301,7 @@ export default function NovaReclamação() {
                                     className="primary-border dark-text fs-5"
                                     value={formData.pais}
                                     onChange={(value) => handleChange('pais', value)}
+                                    required
                                 />
                                 <Form.HelpText>O país onde o problema se encontra</Form.HelpText>
                             </Form.Group>
@@ -300,7 +310,7 @@ export default function NovaReclamação() {
                         <div className='d-block d-md-flex'>
                             <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
                                 <Button
-                                    className='primary-bg light-text bold fs-3 p-3' style={{ borderWidth: 2 }}
+                                    className='mt-3 btn btn-primary'
                                     type='submit'
                                 >Enviar Reclamação</Button>
                             </Form.Group>

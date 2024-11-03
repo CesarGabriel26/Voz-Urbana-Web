@@ -93,8 +93,11 @@ export default function ReclamacoesDoUsuario() {
 
     return (
         <BaseContainer flex={true} footer={false} >
-            <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: .5, borderRightColor: 'black', borderRightStyle: 'solid' }}>
-                <h3 className='primary-text mb-3'>Suas Recentes</h3>
+            <section
+                style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
+                className='border-primary'
+            >
+                <h3 className='text-primary mb-3'>Suas Recentes</h3>
 
                 {/* Barra de pesquisa */}
                 <Input
@@ -127,7 +130,10 @@ export default function ReclamacoesDoUsuario() {
                 </div>
             </section>
 
-            <section className='d-none d-md-block' style={{ flex: 1, borderLeftWidth: .5, borderLeftColor: 'black', borderLeftStyle: 'solid' }}>
+            <section
+                className='d-none d-md-block border-primary'
+                style={{ flex: 1, borderLeftWidth: 2, borderLeftStyle: 'solid' }}
+            >
                 {
                     position ? (
                         <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }} ref={mapRef} >

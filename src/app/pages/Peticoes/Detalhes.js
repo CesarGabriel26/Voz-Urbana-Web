@@ -1,99 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Header, Content, Footer, Loader } from 'rsuite';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import {getPetitionById, getRemainingTimeForPetition } from '../../utils/Api';
+import BaseContainer from '../../components/BaseContainer';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
-import NavigationBar from '../../components/navigationBar';
-import { getReportById, getUserById } from '../../utils/Api';
+export default function VerPeticaoWeb({ petitionId }) {
+    const [petition, setPetition] = useState(null);
+    const [loading, setLoading] = useState(false);
 
+    const statusSteps = ['Coleta', 'Aprovação', 'Conclusão'];
 
-export default function DetalhesReclamacao() {
-    const location = useLocation();
-
-    const [complaint, setComplaint] = useState({});
-    const [User, setUser] = useState({})
-
-    const [loaded, setloaded] = useState(false);
-    const [isSticky, setIsSticky] = useState(false);
-
-    const load = async () => {
+    const loadPetitionDetails = async () => {
         try {
-            const id = location.state?.complaintId;
-            if (id) {
-                setloaded(false)
-                
-                let rest = await getReportById(id)
-                console.log(rest);
-                if (!rest.error) {
-                    setComplaint(rest.content)
-                }
-                
-                rest = await getUserById(rest.content.user_id)
-                console.log(rest);
-                if (!rest.error) {
-                    setUser(rest.content)
-                }
-                setloaded(true)
-            }
-        } catch (error) {
-            setloaded(false)
-            console.log(error);
-        }
-    }
-    const ControleScrollHeader = () => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsSticky(true);
+            setLoading(true);
+            const petitionDetails = await getPetitionById(petitionId);
+            const remainingTime = await getRemainingTimeForPetition(petitionId);
+
+            if (petitionDetails.content) {
+                setPetition({ ...petitionDetails.content, ...remainingTime });
             } else {
-                setIsSticky(false);
+                console.error('No content found in the response');
             }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.error('Error loading petition details:', error);
+        }
+    };
 
     useEffect(() => {
-        load(location.state?.complaintId)
+        loadPetitionDetails();
     }, []);
-    useEffect(() => {
-        ControleScrollHeader()
-    });
 
     return (
-        <Container style={{
-            height: '100vh',
-            paddingTop: isSticky ? 80 : 0,
-        }}>
-            <Header
-                style={{
-                    position: isSticky ? 'fixed' : 'relative',
-                    top: 0,
-                    width: '100%',
-                    zIndex: 1000,
-                    transition: '3.s ease-in-out',
-                }}
-            >
-                <NavigationBar />
-            </Header>
-            <Content style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
-                <div className='gui-container' >
-                    <h1 style={{ textAlign: 'center' }} > {complaint.titulo} </h1>
-                    <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
-                        <section style={{ flex: 2, padding: 15, background: 'red' }} >
-                            
-                        </section>
-                        <section style={{ flex: 1, padding: 15, background: 'blue' }} >
-
-
-
-                        </section>
+        <BaseContainer>
+            {loading && <p>Loading...</p>}
+            {petition ? (
+                <div className="petition-container">
+                    <div className="status-steps">
+                        {statusSteps.map((step, index) => (
+                            <div
+                                key={index}
+                                className={`step ${petition.status >= index ? 'active' : ''}`}
+                            >
+                                {step}
+                            </div>
+                        ))}
                     </div>
+                    
+                    <h1 className="title">{petition.causa || 'Título da Petição'}</h1>
+                    <p className="description">{petition.content || 'Descrição da causa.'}</p>
+
+                    <div className="date-container">
+                        <span>Criada em: {new Date(petition.data).toLocaleDateString()}</span>
+                        <span>Data limite: {new Date(petition.data_limite).toLocaleDateString()}</span>
+                    </div>
+
+                    <div className="progress-container">
+                        <p>
+                            {petition.signatures} de {petition.required_signatures} assinaturas
+                        </p>
+                        <ProgressBar
+                            now={(petition.signatures / petition.required_signatures) * 100}
+                            label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
+                        />
+                    </div>
+
+                    <div className="time-container">
+                        <span>Tempo restante: </span>
+                        <span>
+                            {petition.dias_restantes}d {petition.horas_restantes}h {petition.minutos_restantes}m
+                        </span>
+                    </div>
+
+                    <button
+                        className="sign-button"
+                        onClick={() => alert('Assinatura realizada com sucesso!')}
+                    >
+                        Assinar Petição
+                    </button>
                 </div>
-            </Content>
-            <Footer></Footer>
-        </Container>
+            ) : (
+                <p>Não foi possível carregar os detalhes da petição.</p>
+            )}
+        </BaseContainer>
     );
 }

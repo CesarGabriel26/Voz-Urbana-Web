@@ -3,12 +3,13 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Steps, Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 
 import BaseContainer from '../../components/BaseContainer';
-import { listPetitions, getPetitionById, getUserById } from '../../utils/Api';
+import { listPetitions, getUserById, getPetitionsByUser } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
+import DecodeToken from '../../utils/JWT';
 
-export default function AbaixoAssinados() {
+export default function AbaixoAssinadosDoUsuario() {
 
   const [Petitions, setPetitions] = useState([]);
   const [petition, setPetition] = useState(null);
@@ -22,13 +23,13 @@ export default function AbaixoAssinados() {
   const loadList = async () => {
     try {
       setLoaded(false)
-      let rest = await listPetitions()
+      let userToken = localStorage.getItem('usuario')
+      let user = DecodeToken(userToken)
+      let rest = await getPetitionsByUser(user.id)
 
       if (!rest.error) {
         setPetitions(rest.content)
         setFilteredPetitions(rest.content);
-
-        console.log(rest.content);
       }
       setLoaded(true)
     } catch (error) {
@@ -64,7 +65,6 @@ export default function AbaixoAssinados() {
   useEffect(() => {
     loadList()
   }, [])
-
 
   return (
     <BaseContainer flex={true} footer={false}>
@@ -136,7 +136,7 @@ export default function AbaixoAssinados() {
                 <section style={{ marginBottom: 20 }}>
                   <h2>{petition.causa || 'Título da Petição'}</h2>
                   <FlexboxGrid justify="start" align="top">
-                    <FlexboxGrid.Item colspan={12} style={{ paddingLeft: 20, minHeight: 150}}>
+                    <FlexboxGrid.Item colspan={12} style={{ paddingLeft: 20, minHeight: 150 }}>
                       <p className='dark-text'>{petition.content || 'Descrição da causa.'}</p>
                     </FlexboxGrid.Item>
                   </FlexboxGrid>
@@ -152,13 +152,13 @@ export default function AbaixoAssinados() {
                     <Steps.Item title="Encerrada" />
                   </Steps>
                   <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
-                 
+
                   <ProgressBar
                     style={{ marginBottom: 20, marginTop: 20 }}
                     now={(petition.signatures / petition.required_signatures) * 100}
                     label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
                   />
-                  
+
                   <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
                 </section>
               </Panel>
