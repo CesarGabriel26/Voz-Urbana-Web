@@ -49,7 +49,7 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                                     </p>
                                     {
                                         (buttonsOptions?.hasDefault === false && index < buttons.length - 1) || buttonsOptions?.hasDefault !== false
-                                        ? <span className='text-light'>|</span>
+                                        ? <span key={index} className='text-light'>|</span>
                                         : null
                                     }
 

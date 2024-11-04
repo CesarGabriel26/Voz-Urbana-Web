@@ -8,6 +8,7 @@ import PetitionCard from '../../components/PetitionCard';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
+import { ADMIN_USER_TYPE } from '../../utils/consts';
 
 export default function AbaixoAssinadosDoUsuario() {
 
@@ -18,6 +19,7 @@ export default function AbaixoAssinadosDoUsuario() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
 
   const loadList = async () => {
@@ -160,6 +162,33 @@ export default function AbaixoAssinadosDoUsuario() {
                   />
 
                   <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
+                </section>
+
+                <Divider />
+
+                <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
+                  {
+                    (currentUser != null) ?
+                      (petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
+                        <button
+                          className='mt-3 btn btn-primary'
+                        >
+                          Assinar
+                        </button>
+                      </> : <>
+                        <button
+                          className='mt-3 btn btn-primary'
+                        >
+                          Aprovar
+                        </button>
+                        <button
+                          className='mt-3 btn btn-danger'
+                        >
+                          Reprovar e fechar
+                        </button>
+                      </>
+                      : null
+                  }
                 </section>
               </Panel>
             ) : <div> <Loader content="Selecione uma petição..." /> </div>

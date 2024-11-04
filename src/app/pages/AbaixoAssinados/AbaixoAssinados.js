@@ -19,7 +19,7 @@ export default function AbaixoAssinados() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState({});
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
 
   const loadList = async () => {
@@ -66,9 +66,12 @@ export default function AbaixoAssinados() {
   useEffect(() => {
     loadList()
 
-    let tk = localStorage.getItem('usuario')
-    let user = DecodeToken(tk)
-    setCurrentUser(user)
+    let tk = localStorage.getItem('usuario') || null
+
+    if (tk) {
+      let user = DecodeToken(tk)
+      setCurrentUser(user)
+    }
   }, [])
 
 
@@ -94,7 +97,7 @@ export default function AbaixoAssinados() {
             loaded ? (
               FilteredPetitions.length > 0 ? (
                 FilteredPetitions.map((petition, index) => (
-                  (petition.aberto || currentUser.type === ADMIN_USER_TYPE) ? 
+                  (petition.aberto || currentUser.type === ADMIN_USER_TYPE) ?
                     <PetitionCard
                       key={index}
                       abaixoAssinado={petition}
@@ -109,7 +112,7 @@ export default function AbaixoAssinados() {
                         hasDefault: false
                       }}
                     />
-                  : null
+                    : null
                 ))
               ) : <p>Nenhuma Petição encontrada.</p>
             ) : <Loader size="md" />
@@ -170,24 +173,26 @@ export default function AbaixoAssinados() {
 
                 <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
                   {
-                    (petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
-                      <button
-                        className='mt-3 btn btn-primary'
-                      >
-                        Assinar
-                      </button>
-                    </> : <>
-                      <button
-                        className='mt-3 btn btn-primary'
-                      >
-                        Aprovar
-                      </button>
-                      <button
-                        className='mt-3 btn btn-danger'
-                      >
-                        Reprovar e fechar
-                      </button>
-                    </>
+                    (currentUser != null) ?
+                      (petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
+                        <button
+                          className='mt-3 btn btn-primary'
+                        >
+                          Assinar
+                        </button>
+                      </> : <>
+                        <button
+                          className='mt-3 btn btn-primary'
+                        >
+                          Aprovar
+                        </button>
+                        <button
+                          className='mt-3 btn btn-danger'
+                        >
+                          Reprovar e fechar
+                        </button>
+                      </>
+                      : null
                   }
                 </section>
 

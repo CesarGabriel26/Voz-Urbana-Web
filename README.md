@@ -1,9 +1,7 @@
 
 # Voz Urbana
 
-Uma plataforma onde a população pode reportar problemas na cidade e iniciar abaixo assinados e petições para melhorias no gerenciamento, estrutura, entre outras coisas na sua região
-
-
+Uma plataforma onde a população pode reportar problemas na cidade e iniciar abaixo assinados e petições para melhorias no gerenciamento, estrutura, entre outras coisas na sua região.a
 
 
 ## Todo
@@ -17,8 +15,9 @@ Uma plataforma onde a população pode reportar problemas na cidade e iniciar ab
 - [@CesarGabriel](https://github.com/CesarGabriel26)
 - [@EmanuellyDias](https://github.com/seu@)
 - [@LuisOtavio](https://github.com/seu@)
-- [@SamuelEsqueciTeuSobrenome](https://github.com/seu@)
+- [@SamuelAntonio](https://github.com/samuc555)
 
 
 ![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+
 

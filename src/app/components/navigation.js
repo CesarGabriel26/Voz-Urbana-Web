@@ -11,10 +11,10 @@ import DetalhesReclamacao from '../pages/Reclamacoes/Detalhes';
 import ReclamacoesDoUsuario from '../pages/Reclamacoes/DoUsuario';
 import NovaReclamação from '../pages/Reclamacoes/NovaReclamação';
 
-import AbaixoAssinados from '../pages/Peticoes/AbaixoAssinados';
-import NovoAbaixoAssinado from '../pages/Peticoes/NovoAbaixoAssinado';
-import AbaixoAssinadosDoUsuario from '../pages/Peticoes/DoUsuario';
-import DetalhesAbaixoAssinado from '../pages/Peticoes/Detalhes';
+import AbaixoAssinados from '../pages/AbaixoAssinados/AbaixoAssinados';
+import NovoAbaixoAssinado from '../pages/AbaixoAssinados/NovoAbaixoAssinado';
+import AbaixoAssinadosDoUsuario from '../pages/AbaixoAssinados/DoUsuario';
+import DetalhesAbaixoAssinado from '../pages/AbaixoAssinados/Detalhes';
 
 export default function NavigationRouter() {
   return (
