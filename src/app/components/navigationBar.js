@@ -116,9 +116,9 @@ export default function NavigationBar() {
                                     Perfil
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item onClick={() => {
+                                <NavDropdown.Item as={Link} to="/" onClick={() => {
                                     localStorage.removeItem('usuario');
-                                    window.location.reload();
+                                    window.location.reload()
                                 }} >
                                     Sair
                                 </NavDropdown.Item>
