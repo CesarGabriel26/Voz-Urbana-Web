@@ -110,7 +110,6 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                     </p>
                     <Progress.Line
                         percent={abaixoAssinado.signatures / abaixoAssinado.required_signatures}
-                        borderRadius={20}
                         color={"red"}
                         showInfo={false}
                         style={{ margin: 0, padding: 0, width: 250 }}

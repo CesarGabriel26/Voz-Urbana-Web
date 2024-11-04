@@ -3,7 +3,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Steps, Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 
 import BaseContainer from '../../components/BaseContainer';
-import { listPetitions, getUserById, getPetitionsByUser } from '../../utils/Api';
+import { getUserById, getPetitionsByUser, updatePetition } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
@@ -27,6 +27,7 @@ export default function AbaixoAssinadosDoUsuario() {
       setLoaded(false)
       let userToken = localStorage.getItem('usuario')
       let user = DecodeToken(userToken)
+      setCurrentUser(user)
       let rest = await getPetitionsByUser(user.id)
 
       if (!rest.error) {
@@ -62,6 +63,45 @@ export default function AbaixoAssinadosDoUsuario() {
     console.log(pet);
 
     setLoaded(true)
+  }
+
+  const handleAprove = async () => {
+    petition.status = 1
+    petition.aberto = true
+
+    let resp = await updatePetition(petition.id, petition)
+    if (resp.error) {
+      console.log(resp.error);
+    } else {
+      console.log(resp);
+    }
+    window.location.reload()
+  }
+
+  const handleReprove = async () => {
+    petition.status = -1
+    petition.aberto = false
+
+    let resp = await updatePetition(petition.id, petition)
+    if (resp.error) {
+      console.log(resp.error);
+    } else {
+      console.log(resp);
+    }
+    window.location.reload()
+  }
+
+  const handleEnd = async () => {
+    petition.status = 0
+    petition.aberto = false
+
+    let resp = await updatePetition(petition.id, petition)
+    if (resp.error) {
+      console.log(resp.error);
+    } else {
+      console.log(resp);
+    }
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -148,10 +188,10 @@ export default function AbaixoAssinadosDoUsuario() {
 
                 <section>
                   <h3>Status da Petição</h3>
-                  <Steps current={petition.status + 1} style={{ marginBottom: 20, marginTop: 20 }}>
+                  <Steps current={petition.status === -1 ? 0 : petition.status} currentStatus={petition.status === -1 ? 'error' : 'process'} style={{ marginBottom: 20, marginTop: 20 }}>
                     <Steps.Item title="Aguardando aprovação" />
                     <Steps.Item title="Coleta de assinaturas" />
-                    <Steps.Item title="Encerrada" />
+                    <Steps. Item title="Encerrada" />
                   </Steps>
                   <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
 
@@ -169,23 +209,37 @@ export default function AbaixoAssinadosDoUsuario() {
                 <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
                   {
                     (currentUser != null) ?
-                      (petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
+                      (!petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
                         <button
                           className='mt-3 btn btn-primary'
-                        >
-                          Assinar
-                        </button>
-                      </> : <>
-                        <button
-                          className='mt-3 btn btn-primary'
+                          onClick={handleAprove}
                         >
                           Aprovar
                         </button>
                         <button
                           className='mt-3 btn btn-danger'
+                          onClick={handleReprove}
                         >
                           Reprovar e fechar
                         </button>
+                      </> : <>
+                        <button
+                          className='mt-3 btn btn-primary'
+                        >
+                          Assinar
+                        </button>
+
+                        {
+                          currentUser.type === ADMIN_USER_TYPE ? <>
+                            <button
+                              className='mt-3 btn btn-danger'
+                              onClick={handleEnd}
+                            >
+                              Encerrar
+                            </button>
+                          </> : null
+                        }
+
                       </>
                       : null
                   }

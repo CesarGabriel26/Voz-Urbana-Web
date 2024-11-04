@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Avatar } from 'rsuite'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import logo from '../assets/LogoOutile.png';
 import DecodeToken from '../utils/JWT';
@@ -9,6 +9,7 @@ import DecodeToken from '../utils/JWT';
 export default function NavigationBar() {
     const [userLogged, setUserLogged] = useState(false)
     const [User, setUser] = useState({})
+    const navigate = useNavigate();
 
     const checkUser = async () => {
         let user = localStorage.getItem('usuario') || null;
@@ -112,13 +113,13 @@ export default function NavigationBar() {
                                 style={{ marginRight: 50 }}
                                 className='light-text custom-dropdown d-none d-md-block'
                             >
-                                <NavDropdown.Item href="#action/3.1">
+                                <NavDropdown.Item  as={Link} to="/profile" >
                                     Perfil
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item as={Link} to="/" onClick={() => {
+                                <NavDropdown.Item onClick={() => {
                                     localStorage.removeItem('usuario');
-                                    window.location.reload()
+                                    navigate("/");
                                 }} >
                                     Sair
                                 </NavDropdown.Item>

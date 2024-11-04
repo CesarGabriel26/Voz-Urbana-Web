@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Login from '../pages/Usuario/login';
 import Home from '../pages/Usuario/Home';
+import Perfil from '../pages/Usuario/Perfil';
 import SignUp from '../pages/Usuario/SignUp';
 
 import Reclamacoes from '../pages/Reclamacoes/Reclamacoes';
@@ -21,6 +22,7 @@ export default function NavigationRouter() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Perfil />} />
         
         <Route path="/Complaints" element={<Reclamacoes />} />
         <Route path="/Complaint-Details" element={<DetalhesReclamacao />} />
@@ -34,6 +36,8 @@ export default function NavigationRouter() {
 
         <Route path="/Login" element={<Login />} />
         <Route path="/SignUp" element={<SignUp />} />
+
+        
       </Routes>
     </Router>
   );
