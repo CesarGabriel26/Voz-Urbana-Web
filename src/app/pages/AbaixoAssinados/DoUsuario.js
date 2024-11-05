@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Steps, Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
-
 import BaseContainer from '../../components/BaseContainer';
 import { getUserById, getPetitionsByUser, updatePetition } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
@@ -11,112 +10,78 @@ import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
 
 export default function AbaixoAssinadosDoUsuario() {
-
-  const [Petitions, setPetitions] = useState([]);
+  const [petitions, setPetitions] = useState([]);
   const [petition, setPetition] = useState(null);
-  const [FilteredPetitions, setFilteredPetitions] = useState([]);
+  const [filteredPetitions, setFilteredPetitions] = useState([]);
   const [loaded, setLoaded] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
 
-
   const loadList = async () => {
     try {
-      setLoaded(false)
-      let userToken = localStorage.getItem('usuario')
-      let user = DecodeToken(userToken)
-      setCurrentUser(user)
-      let rest = await getPetitionsByUser(user.id)
-
+      setLoaded(false);
+      const userToken = localStorage.getItem('usuario');
+      const user = DecodeToken(userToken);
+      setCurrentUser(user);
+      const rest = await getPetitionsByUser(user.id);
       if (!rest.error) {
-        setPetitions(rest.content)
-        setFilteredPetitions(rest.content);
+        setPetitions(rest.content);
+        setFilteredPetitions(rest.content || []);
       }
-      setLoaded(true)
+      setLoaded(true);
     } catch (error) {
-      setLoaded(false)
-      console.log(error);
+      console.error(error);
+      setLoaded(true);
     }
-  }
+  };
 
   const handleSearch = (value) => {
     const term = value?.toLowerCase() || '';
     setSearchTerm(value);
-
-    const filtered = Petitions.filter((Petition) => {
-      const titulo = Petition.titulo?.toLowerCase() || '';
-      const content = Petition.content?.toLowerCase() || '';
-      return titulo.includes(term) || content.includes(term);
+    const filtered = petitions.filter((petition) => {
+      const title = petition.titulo?.toLowerCase() || '';
+      const content = petition.content?.toLowerCase() || '';
+      return title.includes(term) || content.includes(term);
     });
-
     setFilteredPetitions(filtered);
   };
 
   const loadPetition = async (pet) => {
-    setLoaded(false)
+    setLoaded(false);
+    const userResp = await getUserById(pet.user_id);
+    setPetition(pet);
+    setUser(userResp.content);
+    setLoaded(true);
+  };
 
-    let userResp = await getUserById(pet.user_id);
-    setPetition(pet)
-    setUser(userResp.content)
-    console.log(pet);
-
-    setLoaded(true)
-  }
-
-  const handleAprove = async () => {
-    petition.status = 1
-    petition.aberto = true
-
-    let resp = await updatePetition(petition.id, petition)
+  const updatePetitionStatus = async (status, aberto) => {
+    petition.status = status;
+    petition.aberto = aberto;
+    const resp = await updatePetition(petition.id, petition);
     if (resp.error) {
-      console.log(resp.error);
+      console.error(resp.error);
     } else {
-      console.log(resp);
+      loadList(); // Recarrega a lista após atualização
     }
-    window.location.reload()
-  }
+  };
 
-  const handleReprove = async () => {
-    petition.status = -1
-    petition.aberto = false
-
-    let resp = await updatePetition(petition.id, petition)
-    if (resp.error) {
-      console.log(resp.error);
-    } else {
-      console.log(resp);
-    }
-    window.location.reload()
-  }
-
-  const handleEnd = async () => {
-    petition.status = 0
-    petition.aberto = false
-
-    let resp = await updatePetition(petition.id, petition)
-    if (resp.error) {
-      console.log(resp.error);
-    } else {
-      console.log(resp);
-    }
-    window.location.reload()
-  }
+  const handleApprove = () => updatePetitionStatus(1, true);
+  const handleReprove = () => updatePetitionStatus(-1, false);
+  const handleEnd = () => updatePetitionStatus(0, false);
 
   useEffect(() => {
-    loadList()
-  }, [])
+    loadList();
+  }, []);
 
   return (
     <BaseContainer flex={true} footer={false}>
       <section
-        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
+        style={{ padding: 15, flexGrow: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
         className='border-primary'
       >
         <h3 className='primary-text mb-3'>Reclamações Recentes</h3>
 
-        {/* Barra de pesquisa */}
         <Input
           value={searchTerm}
           onChange={handleSearch}
@@ -124,57 +89,39 @@ export default function AbaixoAssinadosDoUsuario() {
           style={{ marginBottom: 15 }}
         />
 
-
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll' }}>
-          {
-            loaded ? (
-              FilteredPetitions.length > 0 ? (
-                FilteredPetitions.map((petition, index) => (
-                  <PetitionCard
-                    key={index}
-                    abaixoAssinado={petition}
-                    searchTerm={searchTerm}
-                    buttons={[
-                      {
-                        text: <>Ver main <FaCaretRight /></>,
-                        onclick: () => { loadPetition(petition) }
-                      }
-                    ]}
-                    buttonsOptions={{
-                      hasDefault: false
-                    }}
-                  />
-                ))
-              ) : <p>Nenhuma Petição encontrada.</p>
-            ) : <Loader size="md" />
-          }
+          {loaded ? (
+            filteredPetitions.length > 0 ? (
+              filteredPetitions.map((petition, index) => (
+                <PetitionCard
+                  key={index}
+                  abaixoAssinado={petition}
+                  searchTerm={searchTerm}
+                  buttons={[{
+                    text: <>Ver main <FaCaretRight /></>,
+                    onclick: () => { loadPetition(petition); }
+                  }]}
+                  buttonsOptions={{ hasDefault: false }}
+                />
+              ))
+            ) : <p>Nenhuma Petição encontrada.</p>
+          ) : <Loader size="md" />}
         </div>
       </section>
 
-      <section
-        className='d-none d-md-flex border-primary'
-        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
-      >
+      <section className='d-none d-md-flex border-primary' style={{ padding: 15, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >
           {loaded ? (
             petition ? (
               <Panel bordered shaded style={{ padding: 20, flex: 1 }}>
                 <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar
-                    src={user.pfp}
-                    size="lg"
-                    circle
-                    alt='User Profile'
-                    style={{ marginRight: 20 }}
-                  />
+                  <Avatar src={user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
                   <div>
                     <p className='dark-text m-0'>Petição criada por: <strong>{user.nome}</strong></p>
                     <p className='dark-text m-0'>Em: {formatDate(petition.data, true)}</p>
                   </div>
                 </section>
-
                 <Divider />
-
                 <section style={{ marginBottom: 20 }}>
                   <h2>{petition.causa || 'Título da Petição'}</h2>
                   <FlexboxGrid justify="start" align="top">
@@ -183,75 +130,33 @@ export default function AbaixoAssinadosDoUsuario() {
                     </FlexboxGrid.Item>
                   </FlexboxGrid>
                 </section>
-
                 <Divider />
-
                 <section>
                   <h3>Status da Petição</h3>
                   <Steps current={petition.status === -1 ? 0 : petition.status} currentStatus={petition.status === -1 ? 'error' : 'process'} style={{ marginBottom: 20, marginTop: 20 }}>
                     <Steps.Item title="Aguardando aprovação" />
                     <Steps.Item title="Coleta de assinaturas" />
-                    <Steps. Item title="Encerrada" />
+                    <Steps.Item title="Encerrada" />
                   </Steps>
                   <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
-
                   <ProgressBar
                     style={{ marginBottom: 20, marginTop: 20 }}
                     now={(petition.signatures / petition.required_signatures) * 100}
-                    label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
+                    label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(2)}%`}
                   />
-
-                  <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
-                </section>
-
-                <Divider />
-
-                <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
-                  {
-                    (currentUser != null) ?
-                      (!petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
-                        <button
-                          className='mt-3 btn btn-primary'
-                          onClick={handleAprove}
-                        >
-                          Aprovar
-                        </button>
-                        <button
-                          className='mt-3 btn btn-danger'
-                          onClick={handleReprove}
-                        >
-                          Reprovar e fechar
-                        </button>
-                      </> : <>
-                        <button
-                          className='mt-3 btn btn-primary'
-                        >
-                          Assinar
-                        </button>
-
-                        {
-                          currentUser.type === ADMIN_USER_TYPE ? <>
-                            <button
-                              className='mt-3 btn btn-danger'
-                              onClick={handleEnd}
-                            >
-                              Encerrar
-                            </button>
-                          </> : null
-                        }
-
-                      </>
-                      : null
-                  }
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
+                    <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
+                    <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
+                  </div>
                 </section>
               </Panel>
-            ) : <div> <Loader content="Selecione uma petição..." /> </div>
-          ) : (
-            <Loader content="Carregando detalhes..." />
-          )}
+            ) : (
+              <h4>Selecione uma petição para visualizar os detalhes.</h4>
+            )
+          ) : <Loader size="md" />}
         </div>
       </section>
-
-    </BaseContainer >
+    </BaseContainer>
   );
 }

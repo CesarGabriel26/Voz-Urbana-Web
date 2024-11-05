@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Loader, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
+import { Loader, Panel, Row, Col, Avatar, Divider } from 'rsuite';
 import { useLocation } from 'react-router-dom';
 import { getReportById, getUserById } from '../../utils/Api';
 import { formatDate } from '../../utils/Parser';
@@ -38,10 +38,10 @@ export default function DetalhesReclamacao() {
     }, []);
 
     return (
-        <BaseContainer style={{ paddingTop: 10 }} footer={false} >
+        <BaseContainer style={{ paddingTop: 10 }} footer={false}>
             {loaded ? (
-                <FlexboxGrid justify="center">
-                    <FlexboxGrid.Item colspan={16}>
+                <Row className="justify-content-center">
+                    <Col xs={12} md={8}>
                         <Panel bordered shaded style={{ padding: 20 }}>
                             <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                                 <Avatar
@@ -61,22 +61,22 @@ export default function DetalhesReclamacao() {
 
                             <section style={{ marginBottom: 20 }}>
                                 <h2>{complaint.titulo}</h2>
-                                <FlexboxGrid justify="start" align="top">
-                                    <FlexboxGrid.Item colspan={12}>
+                                <Row>
+                                    <Col xs={12}>
                                         <img
                                             src={complaint.imagem}
                                             alt='Complaint'
-                                            style={{ maxWidth: '100%', borderRadius: 8 }}
+                                            className="img-fluid rounded"
                                         />
-                                    </FlexboxGrid.Item>
-                                    <FlexboxGrid.Item colspan={12} style={{ paddingLeft: 20 }}>
+                                    </Col>
+                                    <Col xs={12} style={{ paddingLeft: 20 }}>
                                         <p className='dark-text'>{complaint.conteudo}</p>
-                                    </FlexboxGrid.Item>
-                                </FlexboxGrid>
+                                    </Col>
+                                </Row>
                             </section>
                         </Panel>
-                    </FlexboxGrid.Item>
-                </FlexboxGrid>
+                    </Col>
+                </Row>
             ) : (
                 <Loader center content="Carregando detalhes..." />
             )}

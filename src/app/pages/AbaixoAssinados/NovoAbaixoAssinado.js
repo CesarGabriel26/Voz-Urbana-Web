@@ -25,7 +25,13 @@ export default function NovoAbaixoAssinado() {
 
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevenir o comportamento padrão do formulário
+    if (!formData.title || !formData.content || !formData.required_signatures) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
     try {
       const formToSend = {
         'user_id': User.id,
@@ -33,18 +39,19 @@ export default function NovoAbaixoAssinado() {
         'content': formData.content,
         'required_signatures': formData.required_signatures,
         'status': 0,
-      }
+      };
 
-      let resp = await createPetition(formToSend)
+      let resp = await createPetition(formToSend);
       if (resp.error) {
-        console.log(resp.error);
+        alert("Erro ao registrar abaixo-assinado: " + resp.error);
       } else {
-        alert("Abaixo Assinado Registrado")
-        navigate(-1)
+        alert("Abaixo Assinado Registrado");
+        navigate(-1);
       }
 
     } catch (error) {
       console.error('Erro na requisição:', error);
+      alert("Erro ao registrar abaixo-assinado. Tente novamente mais tarde.");
     }
   };
 

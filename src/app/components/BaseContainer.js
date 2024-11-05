@@ -17,31 +17,22 @@ export default function BaseContainer({ children, flex = false, footer = true, s
     return (
         <Container style={{ minHeight: '100vh' }}>
             <Header
-                style={{
-                    position: isSticky ? 'fixed' : 'relative',
-                    top: 0,
-                    width: '100%',
-                    zIndex: 1000,
-                    boxShadow: isSticky ? '0 2px 4px rgba(0, 0, 0, 0.1)' : 'none',
-                    transition: 'box-shadow 0.3s ease-in-out',
-                }}
+                className={isSticky ? 'sticky-header' : ''}
             >
                 <NavigationBar />
             </Header>
 
-            <Content style={{ paddingTop: isSticky ? 80 : 0, display: 'flex'}}>
-                <div style={{...style, display: flex ? 'flex' : '', flex: 1}}>
+            <Content style={{ paddingTop: isSticky ? 80 : 0, display: 'flex', flex: 1}}>
+                <div style={{ ...style, display: flex ? 'flex' : 'block', flex: 1 }}>
                     {children}
                 </div>
             </Content>
 
-            {
-                footer ? (
-                    <Footer style={{ textAlign: 'center', padding: 20 }}>
-                        &copy; 2024 Sua Aplicação. Todos os direitos reservados.
-                    </Footer>
-                ) : null
-            }
+            {footer && (
+                <Footer style={{ textAlign: 'center', padding: 20 }}>
+                    &copy; 2024 Sua Aplicação. Todos os direitos reservados.
+                </Footer>
+            )}
         </Container>
     );
 }

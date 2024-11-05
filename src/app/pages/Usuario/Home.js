@@ -39,10 +39,12 @@ export default function Home() {
   useEffect(() => {
     loadList()
   }, []);
- 
+
 
   return (
-    <BaseContainer>
+    <BaseContainer
+      flex={false}
+    >
       <section>
         <Carousel
           key={`bottom.bar`}

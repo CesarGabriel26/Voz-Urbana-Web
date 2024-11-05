@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, ButtonToolbar, Button, Loader } from 'rsuite';
+import { Form, ButtonToolbar, Loader } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/LogoOutile.png';
@@ -22,22 +22,27 @@ export default function SignUp() {
     const handleSubmit = async (data) => {
         setErro("");
 
+        // Verifica se as senhas coincidem
         if (senha !== confirmarSenha) {
             setErro("As senhas não coincidem.");
             return;
         }
 
         setLoading(true);
+        // Prepare o objeto do usuário com o formato correto
         let user = {
             'nome': username,
             'email': email,
             'senha': senha,
             'pfp': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLMI5YxZE03Vnj-s-sth2_JxlPd30Zy7yEGg&s',
             'cpf': cpf,
-        }
+        };
+        
+        // Chamada da API
         const response = await createUser(user);
         setLoading(false);
 
+        // Lida com a resposta da API
         if (response.error) {
             setErro(response.error);
         } else {
@@ -63,7 +68,7 @@ export default function SignUp() {
             }}>
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
                 <h1 className='text-light'>Seja bem vindo!</h1>
-                <h5 className='text-light' >
+                <h5 className='text-light'>
                     Somos uma nova forma de dar voz ao povo em relação aos problemas estruturais de nossas cidades. Buracos na rua, lâmpadas queimadas, terrenos baldios, entre outros problemas finalmente serão comunicados
                     publicamente às autoridades de forma rápida e fácil.
                 </h5>
@@ -96,9 +101,9 @@ export default function SignUp() {
                 >
                     <Form fluid={true} onSubmit={handleSubmit}>
                         <Form.Group controlId="name">
-                            <Form.ControlLabel className='primary-text bold'>Username</Form.ControlLabel>
+                            <Form.ControlLabel className='text-primary bold'>Username</Form.ControlLabel>
                             <Form.Control
-                                className='primary-border'
+                                className='border-primary'
                                 name="name"
                                 value={username}
                                 onChange={(value) => setUsername(value)}
@@ -107,9 +112,9 @@ export default function SignUp() {
                             <Form.HelpText>Username is required</Form.HelpText>
                         </Form.Group>
                         <Form.Group controlId="email">
-                            <Form.ControlLabel className='primary-text bold'>Email</Form.ControlLabel>
+                            <Form.ControlLabel className='text-primary bold'>Email</Form.ControlLabel>
                             <Form.Control
-                                className='primary-border'
+                                className='border-primary'
                                 name="email"
                                 type="email"
                                 value={email}
@@ -119,9 +124,9 @@ export default function SignUp() {
                             <Form.HelpText>Email is required</Form.HelpText>
                         </Form.Group>
                         <Form.Group controlId="CPF">
-                            <Form.ControlLabel className='primary-text bold'>CPF</Form.ControlLabel>
+                            <Form.ControlLabel className='text-primary bold'>CPF</Form.ControlLabel>
                             <Form.Control
-                                className='primary-border'
+                                className='border-primary'
                                 name="CPF"
                                 value={cpf}
                                 onChange={(value) => setCpf(value)}
@@ -130,9 +135,9 @@ export default function SignUp() {
                             <Form.HelpText>CPF is required</Form.HelpText>
                         </Form.Group>
                         <Form.Group controlId="Senha">
-                            <Form.ControlLabel className='primary-text bold'>Senha</Form.ControlLabel>
+                            <Form.ControlLabel className='text-primary bold'>Senha</Form.ControlLabel>
                             <Form.Control
-                                className='primary-border'
+                                className='border-primary'
                                 name="Senha"
                                 type="password"
                                 value={senha}
@@ -141,9 +146,9 @@ export default function SignUp() {
                             />
                         </Form.Group>
                         <Form.Group controlId="confirmarSenha">
-                            <Form.ControlLabel className='primary-text bold'>Confirmar Senha</Form.ControlLabel>
+                            <Form.ControlLabel className='text-primary bold'>Confirmar Senha</Form.ControlLabel>
                             <Form.Control
-                                className='primary-border'
+                                className='border-primary'
                                 name="confirmarSenha"
                                 type="password"
                                 value={confirmarSenha}
@@ -154,7 +159,7 @@ export default function SignUp() {
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'center' }} >
                             <ButtonToolbar>
-                                <Form.ControlLabel className='dark-text sub' >
+                                <Form.ControlLabel className='text-dark sub' >
                                     {Erro ? Erro : (
                                         Loading ? (<Loader size="sm" content="Small" />) : null
                                     )}
@@ -163,13 +168,13 @@ export default function SignUp() {
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
                             <ButtonToolbar>
-                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></Button>
-                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></Button>
+                                <button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></button>
+                                <button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></button>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <Button className='btn btn-primary' type="submit">Criar usuário</Button>
-                            <Button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</Button>
+                            <button className='btn btn-primary' type="submit">Criar usuário</button>
+                            <button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</button>
                         </Form.Group>
                     </Form>
                 </div>

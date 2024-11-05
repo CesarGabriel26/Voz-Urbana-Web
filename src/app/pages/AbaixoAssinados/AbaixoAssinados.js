@@ -18,25 +18,28 @@ export default function AbaixoAssinados() {
   const [loaded, setLoaded] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
+
   const [user, setUser] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
 
 
   const loadList = async () => {
     try {
-      setLoaded(false)
-      let rest = await listPetitions()
-
+      setLoaded(false);
+      let rest = await listPetitions();
       if (!rest.error) {
-        setPetitions(rest.content)
+        setPetitions(rest.content);
         setFilteredPetitions(rest.content);
+      } else {
+        setError('Erro ao carregar petições. Tente novamente mais tarde.');
       }
-      setLoaded(true)
     } catch (error) {
-      setLoaded(false)
-      console.log(error);
+      setError('Erro ao carregar petições. Tente novamente mais tarde.');
+    } finally {
+      setLoaded(true);
     }
-  }
+  };
 
   const handleSearch = (value) => {
     const term = value?.toLowerCase() || '';
@@ -81,7 +84,7 @@ export default function AbaixoAssinados() {
         style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
         className='border-primary'
       >
-        <h3 className='primary-text mb-3'>Reclamações Recentes</h3>
+        <h3 className='primary-text mb-3'>Abaixo-Assinados Recentes</h3>
 
         {/* Barra de pesquisa */}
         <Input
@@ -90,6 +93,7 @@ export default function AbaixoAssinados() {
           placeholder="Pesquisar reclamações..."
           style={{ marginBottom: 15 }}
         />
+        {error && <p className="text-danger">{error}</p>}
 
 
         <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll' }}>

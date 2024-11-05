@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, ButtonToolbar, Button, Loader } from 'rsuite';
+import { Form, ButtonToolbar, Loader } from 'rsuite';
 
 import logo from '../../assets/LogoOutile.png';
 
@@ -7,20 +7,20 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 
 import { loginUser } from '../../utils/Api';
 
-import { Link, useNavigate, useLocation} from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Login() {
     const navigate = useNavigate();
     const location = useLocation();
     let interval;
 
-    const [Email, setEmail] = useState("");
-    const [Senha, setSenha] = useState("");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
 
-    const [Erro, setErro] = useState("");
-    const [Loading, setLoading] = useState(false);
+    const [erro, setErro] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const checkUserDataRecivedFromSingUp = () => {
+    const checkUserDataRecivedFromSignUp = () => {
         const user = location.state?.user;
         if (user && user.email && user.senha) {
             setEmail(user.email);
@@ -28,20 +28,20 @@ export default function Login() {
         }
     }
 
-    useEffect(checkUserDataRecivedFromSingUp, [location.state?.user])
+    useEffect(checkUserDataRecivedFromSignUp, [location.state?.user])
 
-    const Confirmar = async () => {
+    const confirmar = async () => {
         clearInterval(interval);
-        interval  = setInterval(() => {
+        interval = setInterval(() => {
             setErro("");
             clearInterval(interval);
         }, 1500);
 
-        if (Email !== "" && Senha !== "") {
-            setLoading(true)
-            let resp = await loginUser(Email, Senha);
+        if (email !== "" && senha !== "") {
+            setLoading(true);
+            let resp = await loginUser(email, senha);
 
-            setLoading(false)
+            setLoading(false);
 
             if (!resp.error) {
                 localStorage.setItem('usuario', resp.content);
@@ -51,12 +51,12 @@ export default function Login() {
             }
 
         } else {
-            if (Email === "") {
+            if (email === "") {
                 setErro("Preencha o Email");
                 return;
             }
 
-            if (Senha === "") {
+            if (senha === "") {
                 setErro("Preencha a Senha");
                 return;
             }
@@ -83,7 +83,7 @@ export default function Login() {
 
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
 
-                <h1 className='text-light'>Seja bem vindo!</h1>
+                <h1 className='text-light'>Seja bem-vindo!</h1>
                 <h5 className='text-light'>
                     Acesse sua conta de modo fácil
                     para poder aproveitar dos nossos
@@ -119,40 +119,39 @@ export default function Login() {
                 >
                     <Form fluid={true}>
                         <Form.Group controlId="email">
-                            <Form.ControlLabel className='primary-text bold' >Email</Form.ControlLabel>
-                            <Form.Control className='primary-border' name="email" type="email" value={Email} onChange={setEmail} />
-                            <Form.HelpText>Email is required</Form.HelpText>
+                            <Form.ControlLabel className='text-primary bold'>Email</Form.ControlLabel>
+                            <Form.Control className='border-primary' name="email" type="email" value={email} onChange={setEmail} />
+                            <Form.HelpText>Email é obrigatório</Form.HelpText> {/* Atualizado para mensagem em português */}
                         </Form.Group>
-                        <Form.Group controlId="Senha">
-                            <Form.ControlLabel className='primary-text bold' >Senha</Form.ControlLabel>
-                            <Form.Control className='primary-border' name="Senha" type="password" value={Senha} onChange={setSenha} />
-                            <Form.HelpText>Password is required</Form.HelpText>
+                        <Form.Group controlId="senha">
+                            <Form.ControlLabel className='text-primary bold'>Senha</Form.ControlLabel>
+                            <Form.Control className='border-primary' name="senha" type="password" value={senha} onChange={setSenha} />
+                            <Form.HelpText>Senha é obrigatória</Form.HelpText> {/* Atualizado para mensagem em português */}
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
                             <ButtonToolbar>
-                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></Button>
-                                <Button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></Button>
+                                <button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></button>
+                                <button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></button>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'center' }} >
                             <ButtonToolbar>
-                                <Form.ControlLabel className='dark-text sub' >Não possui uma conta?</Form.ControlLabel>
-                                <Form.ControlLabel className='dark-text sub' ><Link to="/SignUp">Registre-se</Link></Form.ControlLabel>
+                                <Form.ControlLabel className='text-dark sub'>Não possui uma conta?</Form.ControlLabel>
+                                <Form.ControlLabel className='text-dark sub'><Link to="/SignUp">Registre-se</Link></Form.ControlLabel>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'center' }} >
                             <ButtonToolbar>
-                                <Form.ControlLabel className='dark-text sub' >
-                                    {Erro? Erro : (
-                                            Loading? (<Loader size="sm" />) : null
-                                        )
-                                    }
+                                <Form.ControlLabel className='text-dark sub' >
+                                    {erro ? erro : (
+                                        loading ? (<Loader size="sm" content="Verificando informações" />) : null
+                                    )}
                                 </Form.ControlLabel>
                             </ButtonToolbar>
                         </Form.Group>
                         <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <Button className='btn btn-primary' onClick={Confirmar} >Entrar</Button>
-                            <Button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</Button>
+                            <button className='btn btn-primary' onClick={confirmar} >Entrar</button>
+                            <button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</button>
                         </Form.Group>
                     </Form>
                 </div>
