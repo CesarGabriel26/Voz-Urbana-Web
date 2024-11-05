@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Form, Input, Button, ButtonToolbar } from 'rsuite';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import L from 'leaflet';
 import { getLatLongFromAddress } from '../../utils/LatLong';
 import BaseContainer from '../../components/BaseContainer';
+import DecodeToken from '../../utils/JWT';
+import { createReport, uploadImage } from '../../utils/Api';
 
 L.Icon.Default.imagePath = 'leaflet/dist/images/';
 
@@ -14,6 +16,8 @@ const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea
 
 export default function NovaReclamação() {
     const location = useLocation();
+    const navigate = useNavigate();
+
     const [image, setImage] = useState(null);
     const [position, setPosition] = useState(null);
     const mapRef = useRef();
@@ -27,7 +31,7 @@ export default function NovaReclamação() {
         cidade: '',
         estado: '',
         cep: '',
-        pais: '',
+        pais: 'Brasil',
     });
 
     useEffect(() => {
@@ -90,6 +94,12 @@ export default function NovaReclamação() {
 
     const buscarEndereco = async () => {
         try {
+            // formData.numero, formData.cep
+            if (formData.rua === "" && formData.cidade === "", formData.estado === "", formData.pais === "") {
+                alert('preencha todos os campos ')
+                return
+            }
+
             let resp = await getLatLongFromAddress(formData.rua, formData.numero, formData.cidade, formData.estado, formData.pais);
             setPosition([resp.latitude, resp.longitude]);
 
@@ -99,15 +109,35 @@ export default function NovaReclamação() {
         }
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
         try {
-            const formToSend = { ...formData, image };
+            await buscarEndereco()
 
-            let resp = await getLatLongFromAddress(formData.rua, formData.numero, formData.cidade, formData.estado, formData.pais);
-            setPosition([resp.latitude, resp.longitude]);
+            let tk = localStorage.getItem('usuario')
+            let us = DecodeToken(tk)
 
-            console.log(formToSend);
+            let img = await uploadImage(formData.image, us.nome)
+
+            const reportData = {
+                latitude: position[0],
+                longitude: position[1],
+                titulo: formData.titulo,
+                conteudo: formData.problema,
+                imagem: img,
+                user_id: us.id,
+                data: new Date().toISOString(),
+                adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
+                prioridade: 5,
+            };
+
+            let resp = await createReport(reportData)
+
+            if (resp.error) {
+                alert(resp.error)
+                return
+            } else {
+                navigate("/")
+            }
 
         } catch (error) {
             console.error('Erro na requisição:', error);
@@ -129,7 +159,7 @@ export default function NovaReclamação() {
                         <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Título</Form.ControlLabel>
                         <Form.Control
                             name="titulo"
-                            style={{ borderWidth: 4, width: '100%' }}
+                            style={{ borderWidth: 2, width: '100%' }}
                             className="border-primary fs-5"
                             value={formData.titulo}
                             onChange={(value) => handleChange('titulo', value)}
@@ -148,7 +178,7 @@ export default function NovaReclamação() {
                             value={formData.problema}
                             onChange={(value) => handleChange('problema', value)}
                             required
-                            style={{ resize: 'none', borderWidth: 4, width: '100%' }}
+                            style={{ resize: 'none', borderWidth: 2, width: '100%' }}
                         />
                     </Form.Group>
 
@@ -205,7 +235,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Número</Form.ControlLabel>
                             <Form.Control
                                 name="numero"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.numero}
                                 onChange={(value) => handleChange('numero', value)}
@@ -217,7 +247,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Rua</Form.ControlLabel>
                             <Form.Control
                                 name="rua"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.rua}
                                 onChange={(value) => handleChange('rua', value)}
@@ -231,7 +261,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>CEP</Form.ControlLabel>
                             <Form.Control
                                 name="cep"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.cep}
                                 onChange={(value) => handleChange('cep', value)}
@@ -242,7 +272,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Cidade</Form.ControlLabel>
                             <Form.Control
                                 name="cidade"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.cidade}
                                 onChange={(value) => handleChange('cidade', value)}
@@ -256,7 +286,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
                             <Form.Control
                                 name="estado"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.estado}
                                 onChange={(value) => handleChange('estado', value)}
@@ -268,7 +298,7 @@ export default function NovaReclamação() {
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>País</Form.ControlLabel>
                             <Form.Control
                                 name="pais"
-                                style={{ borderWidth: 4, width: '100%' }}
+                                style={{ borderWidth: 2, width: '100%' }}
                                 className="border-primary fs-5"
                                 value={formData.pais}
                                 onChange={(value) => handleChange('pais', value)}
@@ -282,7 +312,7 @@ export default function NovaReclamação() {
                             <button className='btn btn-primary' type="submit" style={{ marginTop: 15 }}>
                                 Enviar Reclamação
                             </button>
-                            <button className='btn btn-warning' onClick={buscarEndereco} style={{ marginTop: 15 }}>
+                            <button className='btn btn-warning' type='button' onClick={buscarEndereco} style={{ marginTop: 15 }}>
                                 Verificar Endereço
                             </button>
                         </ButtonToolbar>

@@ -1,12 +1,12 @@
 import React from 'react';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../utils/Parser';
-import { Progress } from 'rsuite';
+import { Progress, Highlight} from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
 const styles = {
     card: {
-
+        minWidth: 400,
         padding: 20,
         borderRadius: 15,
         marginBottom: 15,
@@ -77,17 +77,19 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                 }}>
                     {abaixoAssinado.titulo}
                 </p>
-                <p className='dark-text' style={{
-                    maxHeight: 100,
-                    overflow: 'hidden',
-                    wordBreak: 'break-word',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 4,
-                    textOverflow: 'ellipsis',
-                }}>
-                    {abaixoAssinado.content}
-                </p>
+                <Highlight query={searchTerm}>
+                    <p className='dark-text' style={{
+                        maxHeight: 100,
+                        overflow: 'hidden',
+                        wordBreak: 'break-word',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 4,
+                        textOverflow: 'ellipsis',
+                    }}>
+                        {abaixoAssinado.content}
+                    </p>
+                </Highlight>
                 <div style={styles.progressContainer}>
                     <p className='dark-text' style={{ margin: 0 }}>{abaixoAssinado.signatures}</p>
                     <Progress.Line

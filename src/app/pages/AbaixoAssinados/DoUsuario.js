@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { Steps, Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 import BaseContainer from '../../components/BaseContainer';
-import { getUserById, getPetitionsByUser, updatePetition } from '../../utils/Api';
+import { getUserById, getPetitionsByUser, updatePetition, deletePetition } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
+import { updatePetitionStatus } from '../../controllers/petitionController';
 
 export default function AbaixoAssinadosDoUsuario() {
   const [petitions, setPetitions] = useState([]);
@@ -55,20 +56,20 @@ export default function AbaixoAssinadosDoUsuario() {
     setLoaded(true);
   };
 
-  const updatePetitionStatus = async (status, aberto) => {
-    petition.status = status;
-    petition.aberto = aberto;
-    const resp = await updatePetition(petition.id, petition);
+  
+
+  const handleApprove = () => updatePetitionStatus(petition, 1, true, ()=>{loadList()});
+  const handleReprove = () => updatePetitionStatus(petition, -1, true, ()=>{loadList()});
+  const handleEnd = () => updatePetitionStatus(petition, 0, false, ()=>{loadList()});
+  const handleDelete = async () => {
+    const resp = await deletePetition(petition.id)
     if (resp.error) {
-      console.error(resp.error);
+      console.log(resp.error);
     } else {
       loadList(); // Recarrega a lista após atualização
+      setPetition({})
     }
-  };
-
-  const handleApprove = () => updatePetitionStatus(1, true);
-  const handleReprove = () => updatePetitionStatus(-1, false);
-  const handleEnd = () => updatePetitionStatus(0, false);
+  }
 
   useEffect(() => {
     loadList();
@@ -126,7 +127,7 @@ export default function AbaixoAssinadosDoUsuario() {
                 <section style={{ marginBottom: 20 }}>
                   <h2>{petition.titulo || 'Título da Petição'}</h2>
                   <FlexboxGrid justify="start" align="top">
-                    <FlexboxGrid.Item  style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
+                    <FlexboxGrid.Item style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
                       <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
                     </FlexboxGrid.Item>
                   </FlexboxGrid>
@@ -149,6 +150,7 @@ export default function AbaixoAssinadosDoUsuario() {
                     <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
                     <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
                     <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
+                    <button className='btn btn-danger' onClick={handleDelete}>Apagar</button>
                   </div>
                 </section>
               </Panel>

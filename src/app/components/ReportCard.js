@@ -6,15 +6,19 @@ import { Highlight } from 'rsuite';
 
 const styles = {
     card: {
+        minWidth: 400,
         padding: 20,
         borderRadius: 15,
         marginBottom: 15,
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        display: 'flex',
+        flexDirection: "column"
     },
     cardBody: {
         minHeight: 120,
         padding: 10,
         borderRadius: 10,
+        flex: 1,
     },
     cardText: {
         fontSize: 14,
@@ -52,7 +56,20 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
                 </div>
             </div>
             <div className='bg-body' style={styles.cardBody}>
+                <p className='dark-text bold' style={{
+                    maxHeight: 150,
+                    overflow: 'hidden',
+                    wordBreak: 'break-word',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    textOverflow: 'ellipsis',
+                    marginBottom: 2
+                }}>
+                    {complaint.titulo}
+                </p>
                 <Highlight query={searchTerm}>
+
                     <p className='dark-text' style={{
                         maxHeight: 150,
                         overflow: 'hidden',

@@ -295,6 +295,8 @@ export const uploadImage = async (imageUri, userName) => {
 
     const response = await fetch(`${URL}/imagem/upload`, {
         method: 'POST',
+        headers: {
+        },
         body: formData,
     });
 
@@ -305,4 +307,32 @@ export const uploadImage = async (imageUri, userName) => {
     }
 
     return response.json();
+}
+
+/**
+ * Envia uma imagem para a API
+ * @param {string} fileName - URI da imagem
+ * @returns {Promise<Object>} - Resposta da API
+ */
+export const deleteImage = async (fileName) => {
+    try {
+        const response = await fetch(`${URL}/imagem/delete`, {
+            method: 'POST',  // Mudado para POST
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ link: fileName }),  // Enviando o link no corpo
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(`Erro ao deletar imagem: ${errorResponse.error || response.statusText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
+

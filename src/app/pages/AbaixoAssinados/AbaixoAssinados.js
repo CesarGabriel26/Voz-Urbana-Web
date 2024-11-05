@@ -9,6 +9,7 @@ import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
+import { updatePetitionStatus } from '../../controllers/petitionController';
 
 export default function AbaixoAssinados() {
 
@@ -20,7 +21,7 @@ export default function AbaixoAssinados() {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
 
@@ -77,6 +78,10 @@ export default function AbaixoAssinados() {
     }
   }, [])
 
+  const handleApprove = () => updatePetitionStatus(petition, 1, true, ()=>{loadList()});
+  const handleReprove = () => updatePetitionStatus(petition, -1, true, ()=>{loadList()});
+  const handleEnd = () => updatePetitionStatus(petition, 0, false, ()=>{loadList()});
+
 
   return (
     <BaseContainer flex={true} footer={false}>
@@ -96,12 +101,12 @@ export default function AbaixoAssinados() {
         {error && <p className="text-danger">{error}</p>}
 
 
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll'}}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll' }}>
           {
             loaded ? (
               FilteredPetitions.length > 0 ? (
                 FilteredPetitions.map((petition, index) => (
-                  (petition.aberto || currentUser.type === ADMIN_USER_TYPE) ?
+                  (petition.aberto || (currentUser && currentUser.type === ADMIN_USER_TYPE)) ?
                     <PetitionCard
                       key={index}
                       abaixoAssinado={petition}
@@ -178,30 +183,23 @@ export default function AbaixoAssinados() {
                 <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
                   {
                     (currentUser != null) ?
-                      (petition.aberto && currentUser.type === ADMIN_USER_TYPE) ? <>
+                      (petition.aberto) ? <>
                         <button
                           className='mt-3 btn btn-primary'
                         >
                           Assinar
                         </button>
                       </> : <>
-                        <button
-                          className='mt-3 btn btn-primary'
-                        >
-                          Aprovar
-                        </button>
-                        <button
-                          className='mt-3 btn btn-danger'
-                        >
-                          Reprovar e fechar
-                        </button>
+                        <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
+                        <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
+                        <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
                       </>
                       : null
                   }
                 </section>
 
               </Panel>
-              
+
             ) : <div> <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4> </div>
           ) : (
             <Loader content="Carregando detalhes..." />

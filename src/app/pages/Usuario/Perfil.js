@@ -57,9 +57,14 @@ export default function Perfil() {
     }, [theme]);
 
     const handleChangeTheme = (value) => {
-        setTheme(value);
-        setShowMessage(true);
-        setTimeout(() => setShowMessage(false), 2000);
+        try {
+            setTheme(value);
+            setShowMessage(true);
+            setTimeout(() => setShowMessage(false), 2000);
+        } catch (error) {
+            console.log(error);
+            
+        }
     };
 
     const handleEditToggle = () => {

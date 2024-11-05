@@ -71,7 +71,7 @@ export default function Home() {
           {
             loaded ? (
               complaints.map((complaint, index) => (
-                complaint.aberto ? (
+                complaint.aceito ? (
                   <ReportCard complaint={complaint} key={index} />
                 ) : null
               ))
@@ -87,7 +87,7 @@ export default function Home() {
           {
             loaded ? (
               abaixoAssinados.map((abaixoAssinado, index) => (
-                !abaixoAssinado.aberto ? (
+                abaixoAssinado.aberto ? (
                   <PetitionCard style={{maxWidth: 500,}} abaixoAssinado={abaixoAssinado} key={index} />
                 ) : null
               ))
