@@ -1,4 +1,4 @@
-const URL = "http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app"; // http://192.168.0.152:5000
+const URL = "https://voz-urbana-api.vercel.app" //"https://voz-urbana-api.vercel.app"; // http://192.168.0.152:5000
 
 // ==============================
 // Funções para Usuários
