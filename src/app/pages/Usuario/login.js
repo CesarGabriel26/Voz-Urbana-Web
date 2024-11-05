@@ -66,14 +66,14 @@ export default function Login() {
     return (
         <div style={{
             display: 'flex',
+            flexDirection: 'row',
             width: '100%',
             height: '100vh',
         }} >
 
-            <div className='bg-primary' style={{
-                display: 'flex',
+            <div className='bg-primary d-none d-md-flex' style={{
                 flexDirection: 'column',
-                width: '50%',
+                flex: 1,
                 height: '100vh',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -95,11 +95,11 @@ export default function Login() {
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '50%',
                 height: '100vh',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: 50
+                padding: 50,
+                flex: 1
             }} >
                 <div
                     className='border-primary'

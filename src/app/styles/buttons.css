@@ -1,0 +1,16 @@
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-color: #fff;
+    --bs-btn-disabled-color: #fff;
+
+    --bs-btn-bg: #0A62AC !important;
+    --bs-btn-disabled-bg: #0A62AC !important;
+    --bs-btn-border-color: #0A62AC !important;
+    --bs-btn-disabled-border-color: #0A62AC !important;
+
+    --bs-btn-hover-bg: #2685d2 !important; /* mais claro */
+    --bs-btn-active-bg: #2685d2 !important; /* mais claro */
+    --bs-btn-hover-border-color: #2685d2 !important; /* mais claro */
+    --bs-btn-active-border-color: #2685d2 !important; /* mais claro */
+}

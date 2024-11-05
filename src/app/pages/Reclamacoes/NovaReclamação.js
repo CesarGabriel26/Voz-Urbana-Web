@@ -92,7 +92,7 @@ export default function NovaReclamação() {
         try {
             let resp = await getLatLongFromAddress(formData.rua, formData.numero, formData.cidade, formData.estado, formData.pais);
             setPosition([resp.latitude, resp.longitude]);
-       
+
         } catch (error) {
             console.error('Erro ao buscar endereço:', error);
             alert("Erro ao buscar o endereço.");
@@ -200,85 +200,91 @@ export default function NovaReclamação() {
                         )}
                     </div>
 
-                    <Form.Group controlId="numero" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Número</Form.ControlLabel>
-                        <Form.Control
-                            name="numero"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.numero}
-                            onChange={(value) => handleChange('numero', value)}
-                            required
-                        />
-                    </Form.Group>
+                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
+                        <Form.Group controlId="numero" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Número</Form.ControlLabel>
+                            <Form.Control
+                                name="numero"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.numero}
+                                onChange={(value) => handleChange('numero', value)}
+                                required
+                            />
+                        </Form.Group>
 
-                    <Form.Group controlId="rua" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Rua</Form.ControlLabel>
-                        <Form.Control
-                            name="rua"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.rua}
-                            onChange={(value) => handleChange('rua', value)}
-                            required
-                        />
-                    </Form.Group>
+                        <Form.Group controlId="rua" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Rua</Form.ControlLabel>
+                            <Form.Control
+                                name="rua"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.rua}
+                                onChange={(value) => handleChange('rua', value)}
+                                required
+                            />
+                        </Form.Group>
+                    </div>
 
-                    <Form.Group controlId="cep" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>CEP</Form.ControlLabel>
-                        <Form.Control
-                            name="cep"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.cep}
-                            onChange={(value) => handleChange('cep', value)}
-                        />
-                    </Form.Group>
+                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
+                        <Form.Group controlId="cep" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>CEP</Form.ControlLabel>
+                            <Form.Control
+                                name="cep"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.cep}
+                                onChange={(value) => handleChange('cep', value)}
+                            />
+                        </Form.Group>
 
-                    <Form.Group controlId="cidade" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Cidade</Form.ControlLabel>
-                        <Form.Control
-                            name="cidade"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.cidade}
-                            onChange={(value) => handleChange('cidade', value)}
-                            required
-                        />
-                    </Form.Group>
+                        <Form.Group controlId="cidade" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Cidade</Form.ControlLabel>
+                            <Form.Control
+                                name="cidade"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.cidade}
+                                onChange={(value) => handleChange('cidade', value)}
+                                required
+                            />
+                        </Form.Group>
+                    </div>
 
-                    <Form.Group controlId="estado" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
-                        <Form.Control
-                            name="estado"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.estado}
-                            onChange={(value) => handleChange('estado', value)}
-                            required
-                        />
-                    </Form.Group>
+                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
+                        <Form.Group controlId="estado" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
+                            <Form.Control
+                                name="estado"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.estado}
+                                onChange={(value) => handleChange('estado', value)}
+                                required
+                            />
+                        </Form.Group>
 
-                    <Form.Group controlId="pais" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>País</Form.ControlLabel>
-                        <Form.Control
-                            name="pais"
-                            style={{ borderWidth: 4, width: '100%' }}
-                            className="border-primary fs-5"
-                            value={formData.pais}
-                            onChange={(value) => handleChange('pais', value)}
-                            required
-                        />
-                    </Form.Group>
+                        <Form.Group controlId="pais" style={{ flex: 1, width: '100%' }}>
+                            <Form.ControlLabel className='text-primary-emphasis bold fs-5'>País</Form.ControlLabel>
+                            <Form.Control
+                                name="pais"
+                                style={{ borderWidth: 4, width: '100%' }}
+                                className="border-primary fs-5"
+                                value={formData.pais}
+                                onChange={(value) => handleChange('pais', value)}
+                                required
+                            />
+                        </Form.Group>
+                    </div>
 
                     <Form.Group>
                         <ButtonToolbar>
-                            <Button appearance="primary" type="submit" style={{ marginTop: 15 }}>
+                            <button className='btn btn-primary' type="submit" style={{ marginTop: 15 }}>
                                 Enviar Reclamação
-                            </Button>
-                            <Button appearance="primary" onClick={buscarEndereco} style={{ marginTop: 15 }}>
+                            </button>
+                            <button className='btn btn-warning' onClick={buscarEndereco} style={{ marginTop: 15 }}>
                                 Verificar Endereço
-                            </Button>
+                            </button>
                         </ButtonToolbar>
                     </Form.Group>
                 </section>

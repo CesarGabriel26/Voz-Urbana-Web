@@ -4,8 +4,11 @@ import BaseContainer from '../../components/BaseContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DecodeToken from '../../utils/JWT';
 import { updateUser, verifyPassword } from '../../utils/Api';
+import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
+    const navigate = useNavigate();
+
     const [userData, setUserData] = useState({
         id: '',
         nome: '',
@@ -184,11 +187,23 @@ export default function Perfil() {
                     </div>
 
                     <Divider></Divider>
-                   
+
                     {/* Botão para editar perfil */}
-                    <Button appearance="primary" onClick={handleEditToggle}>
-                        {editing ? 'Cancelar' : 'Editar Perfil'}
-                    </Button>
+                    <div style={{ display: 'flex', gap: 5 }} >
+                        <button className='btn btn-primary' onClick={handleEditToggle}>
+                            {editing ? 'Cancelar' : 'Editar Perfil'}
+                        </button>
+
+                        <button className='btn btn-danger' onClick={() => {
+                            localStorage.removeItem('usuario');
+                            navigate("/");
+                            window.location.reload();
+                        }}>
+                            Sair
+                        </button>
+                    </div>
+
+
 
                     {/* Modal de Edição */}
                     <Modal open={editing} onClose={handleEditToggle}>

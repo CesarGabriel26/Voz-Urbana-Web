@@ -2,19 +2,23 @@ import React from 'react';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../utils/Parser';
 import { Progress } from 'rsuite';
+import { useNavigate } from 'react-router-dom';
 
 const styles = {
     card: {
-        minWidth: 400,
+
         padding: 20,
         borderRadius: 15,
         marginBottom: 15,
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        display: 'flex',
+        flexDirection: "column"
     },
     cardBody: {
         minHeight: 120,
         padding: 10,
         borderRadius: 10,
+        flex: 1,
     },
     cardText: {
         fontSize: 14,
@@ -32,9 +36,11 @@ const styles = {
     },
 };
 
-export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, buttonsOptions }) {
+export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, buttonsOptions, style }) {
+    let navigate = useNavigate()
+
     return (
-        <div className='bg-primary' style={styles.card}>
+        <div className='bg-primary' style={{ ...styles.card, ...style }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <p className='text-light' style={styles.cardText}>
                     {formatDate(abaixoAssinado.data)}
@@ -49,14 +55,18 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                         </React.Fragment>
                     ))}
                     {buttonsOptions?.hasDefault === false ? null : (
-                        <p className='text-light bt-link' style={styles.button} onClick={() => console.log(abaixoAssinado.id)}>
+                        <p className='text-light bt-link' style={styles.button} onClick={() => {
+                            navigate('/Abaixo-Assinados-Detalhes', { state: { petitionId: abaixoAssinado.id } })
+
+                        }}>
                             Ver mais <FaCaretRight />
                         </p>
                     )}
                 </div>
             </div>
+
             <div className='bg-body' style={styles.cardBody}>
-                <p className='dark-text' style={{
+                <p className='dark-text bold' style={{
                     maxHeight: 150,
                     overflow: 'hidden',
                     wordBreak: 'break-word',
@@ -65,7 +75,7 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                     WebkitLineClamp: 2,
                     textOverflow: 'ellipsis',
                 }}>
-                    {abaixoAssinado.causa}
+                    {abaixoAssinado.titulo}
                 </p>
                 <p className='dark-text' style={{
                     maxHeight: 100,

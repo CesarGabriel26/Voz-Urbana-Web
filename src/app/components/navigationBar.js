@@ -86,17 +86,6 @@ export default function NavigationBar() {
                                 </>
                             )}
                         </NavDropdown>
-
-                        <Nav.Link
-                            className='text-light d-block d-md-none'
-                            onClick={() => {
-                                localStorage.removeItem('usuario');
-                                navigate("/");
-                                window.location.reload();
-                            }}
-                        >
-                            Sair
-                        </Nav.Link>
                     </Nav>
                     {!userLogged ? (
                         <Nav className='align-items-sm-center'>

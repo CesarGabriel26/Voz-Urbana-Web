@@ -96,7 +96,7 @@ export default function AbaixoAssinados() {
         {error && <p className="text-danger">{error}</p>}
 
 
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll' }}>
+        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll'}}>
           {
             loaded ? (
               FilteredPetitions.length > 0 ? (
@@ -149,10 +149,10 @@ export default function AbaixoAssinados() {
                 <Divider />
 
                 <section style={{ marginBottom: 20 }}>
-                  <h2>{petition.causa || 'Título da Petição'}</h2>
+                  <h2>{petition.titulo || 'Título da Petição'}</h2>
                   <FlexboxGrid justify="start" align="top">
-                    <FlexboxGrid.Item colspan={12} style={{ paddingLeft: 20, minHeight: 150 }}>
-                      <p className='dark-text'>{petition.content || 'Descrição da causa.'}</p>
+                    <FlexboxGrid.Item style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
+                      <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
                     </FlexboxGrid.Item>
                   </FlexboxGrid>
                 </section>

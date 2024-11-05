@@ -14,7 +14,8 @@ export default function NovoAbaixoAssinado() {
   const [formData, setFormData] = useState({
     'title': "",
     'content': "",
-    'required_signatures': 100000,
+    'required_signatures': 1000,
+    'local' : ""
   });
   const [User, setUser] = useState(null);
 
@@ -25,9 +26,8 @@ export default function NovoAbaixoAssinado() {
 
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevenir o comportamento padrão do formulário
-    if (!formData.title || !formData.content || !formData.required_signatures) {
+  const handleSubmit = async () => {
+    if (!formData.title || !formData.content || !formData.required_signatures || !formData.local) {
       alert("Por favor, preencha todos os campos obrigatórios.");
       return;
     }
@@ -35,10 +35,10 @@ export default function NovoAbaixoAssinado() {
     try {
       const formToSend = {
         'user_id': User.id,
-        'causa': formData.title,
+        'titulo': formData.title,
         'content': formData.content,
         'required_signatures': formData.required_signatures,
-        'status': 0,
+        'local' : formData.local,
       };
 
       let resp = await createPetition(formToSend);
@@ -81,10 +81,18 @@ export default function NovoAbaixoAssinado() {
               />
               <Form.HelpText className='text-dark-emphasis'>required</Form.HelpText>
             </Form.Group>
+            <Form.Group controlId="local">
+              <Form.ControlLabel className='text-primary-emphasis bold'>local</Form.ControlLabel>
+              <Form.Control
+                name="local"
+                onChange={(value) => handleChange('local', value)}
+              />
+              <Form.HelpText className='text-dark-emphasis'>optional (caso um local seja afetado o descreva aqui)</Form.HelpText>
+            </Form.Group>
             <Form.Group controlId="Assinatiras">
               <Form.ControlLabel className='text-primary-emphasis bold'>Assinatiras</Form.ControlLabel>
               <Form.Control
-                name="Assinatiras" type='number' min={100000} value={formData.required_signatures}
+                name="Assinatiras" type='number' min={1000} value={formData.required_signatures}
                 onChange={(value) => handleChange('required_signatures', value)}
               />
               <Form.HelpText className='text-dark-emphasis'>required</Form.HelpText>
