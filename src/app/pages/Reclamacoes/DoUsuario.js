@@ -90,7 +90,7 @@ export default function ReclamacoesDoUsuario() {
                 style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRight: '2px solid', borderColor: 'primary' }}
                 className='border-primary'
             >
-                <h3 className='text-primary mb-3'>Suas Recentes</h3>
+                <h3 className='text-primary-emphasis mb-3'>Suas Recentes</h3>
                 <Input
                     value={searchTerm}
                     onChange={handleSearch}
@@ -113,7 +113,7 @@ export default function ReclamacoesDoUsuario() {
                                         }]}
                                     />
                                 ))
-                            ) : <p>Nenhuma reclamação encontrada.</p>
+                            ) : <p className='text-dark-emphasis'>Nenhuma reclamação encontrada.</p>
                         ) : <Loader size="md" />
                     }
                 </div>

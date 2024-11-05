@@ -123,10 +123,10 @@ export default function NovaReclamação() {
         <BaseContainer footer={false} flex={true}>
             <Form onSubmit={handleSubmit} className='d-block d-md-flex' style={{ flex: 1, margin: 0 }}>
                 <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }} className='border-primary'>
-                    <h3 className='text-primary mb-3'>Crie uma nova reclamação</h3>
+                    <h3 className='text-primary-emphasis mb-3'>Crie uma nova reclamação</h3>
 
                     <Form.Group controlId="titulo" >
-                        <Form.ControlLabel className='text-primary bold fs-5'>Título</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Título</Form.ControlLabel>
                         <Form.Control
                             name="titulo"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -135,11 +135,11 @@ export default function NovaReclamação() {
                             onChange={(value) => handleChange('titulo', value)}
                             required
                         />
-                        <Form.HelpText>Uma descrição curta que indique seu problema</Form.HelpText>
+                        <Form.HelpText className='text-dark-emphasis'>Uma descrição curta que indique seu problema</Form.HelpText>
                     </Form.Group>
 
                     <Form.Group controlId="problema" >
-                        <Form.ControlLabel className="text-primary bold fs-5">Informe o seu problema</Form.ControlLabel>
+                        <Form.ControlLabel className="text-primary-emphasis bold fs-5">Informe o seu problema</Form.ControlLabel>
                         <Form.Control
                             className="border-primary fs-5"
                             rows={5}
@@ -153,7 +153,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="image" >
-                        <Form.ControlLabel className='text-primary bold fs-5'>Carregue uma imagem do local e/ou problema</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Carregue uma imagem do local e/ou problema</Form.ControlLabel>
                         <div {...getRootProps()} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
                             <input {...getInputProps()} />
                             {image ? (
@@ -172,12 +172,12 @@ export default function NovaReclamação() {
                                 />
                             )}
                         </div>
-                        <Form.HelpText>Selecione uma imagem da galeria ou tire uma foto.</Form.HelpText>
+                        <Form.HelpText className='text-dark-emphasis' >Selecione uma imagem da galeria ou tire uma foto.</Form.HelpText>
                     </Form.Group>
                 </section>
 
                 <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', borderLeftWidth: 2, borderLeftStyle: 'solid' }} className='border-primary'>
-                    <h3 className='text-primary mb-3'>Informações do local</h3>
+                    <h3 className='text-primary-emphasis mb-3'>Informações do local</h3>
 
                     <div style={{ width: "100%", height: 300 }}>
                         {position ? (
@@ -201,7 +201,7 @@ export default function NovaReclamação() {
                     </div>
 
                     <Form.Group controlId="numero" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>Número</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Número</Form.ControlLabel>
                         <Form.Control
                             name="numero"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -213,7 +213,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="rua" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>Rua</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Rua</Form.ControlLabel>
                         <Form.Control
                             name="rua"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -225,7 +225,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="cep" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>CEP</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>CEP</Form.ControlLabel>
                         <Form.Control
                             name="cep"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -236,7 +236,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="cidade" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>Cidade</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Cidade</Form.ControlLabel>
                         <Form.Control
                             name="cidade"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -248,7 +248,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="estado" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>Estado</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
                         <Form.Control
                             name="estado"
                             style={{ borderWidth: 4, width: '100%' }}
@@ -260,7 +260,7 @@ export default function NovaReclamação() {
                     </Form.Group>
 
                     <Form.Group controlId="pais" style={{ flex: 1, width: '100%' }}>
-                        <Form.ControlLabel className='text-primary bold fs-5'>País</Form.ControlLabel>
+                        <Form.ControlLabel className='text-primary-emphasis bold fs-5'>País</Form.ControlLabel>
                         <Form.Control
                             name="pais"
                             style={{ borderWidth: 4, width: '100%' }}

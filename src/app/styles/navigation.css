@@ -4,7 +4,7 @@
 }
 
 .dropdown-toggle.nav-link {
-    color: var(--light) !important;
+    color: var(--bs-light) !important;
 }
 
 .bt-link {

@@ -80,7 +80,7 @@ export default function AbaixoAssinadosDoUsuario() {
         style={{ padding: 15, flexGrow: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
         className='border-primary'
       >
-        <h3 className='primary-text mb-3'>Reclamações Recentes</h3>
+        <h3 className='text-primary-emphasis mb-3'>Reclamações Recentes</h3>
 
         <Input
           value={searchTerm}
@@ -104,7 +104,7 @@ export default function AbaixoAssinadosDoUsuario() {
                   buttonsOptions={{ hasDefault: false }}
                 />
               ))
-            ) : <p>Nenhuma Petição encontrada.</p>
+            ) : <p className='text-dark-emphasis'>Nenhuma Petição encontrada.</p>
           ) : <Loader size="md" />}
         </div>
       </section>
@@ -152,7 +152,7 @@ export default function AbaixoAssinadosDoUsuario() {
                 </section>
               </Panel>
             ) : (
-              <h4>Selecione uma petição para visualizar os detalhes.</h4>
+              <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4>
             )
           ) : <Loader size="md" />}
         </div>

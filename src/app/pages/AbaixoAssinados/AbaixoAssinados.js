@@ -84,7 +84,7 @@ export default function AbaixoAssinados() {
         style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
         className='border-primary'
       >
-        <h3 className='primary-text mb-3'>Abaixo-Assinados Recentes</h3>
+        <h3 className='text-primary-emphasis mb-3'>Abaixo-Assinados Recentes</h3>
 
         {/* Barra de pesquisa */}
         <Input
@@ -118,7 +118,7 @@ export default function AbaixoAssinados() {
                     />
                     : null
                 ))
-              ) : <p>Nenhuma Petição encontrada.</p>
+              ) : <p className='text-dark-emphasis' >Nenhuma Petição encontrada.</p>
             ) : <Loader size="md" />
           }
         </div>
@@ -201,7 +201,8 @@ export default function AbaixoAssinados() {
                 </section>
 
               </Panel>
-            ) : <div> <Loader content="Selecione uma petição..." /> </div>
+              
+            ) : <div> <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4> </div>
           ) : (
             <Loader content="Carregando detalhes..." />
           )}

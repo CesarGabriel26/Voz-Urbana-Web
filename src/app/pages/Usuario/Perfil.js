@@ -116,35 +116,35 @@ export default function Perfil() {
                     <div className="d-flex align-items-center mb-4">
                         <Avatar size="lg" src={userData.pfp} alt="Foto de Perfil" />
                         <div className="ms-3">
-                            <h4>{userData.nome}</h4>
+                            <h4 className='text-dark-emphasis'>{userData.nome}</h4>
                             <p className="text-muted">{userData.email}</p>
                         </div>
                     </div>
 
-                    <Divider>Informações do Usuário</Divider>
+                    <Divider className='text-dark-emphasis'>Informações do Usuário</Divider>
 
                     <div className="row mb-4">
                         <div className="col-md-6">
-                            <p><strong>CPF:</strong> {userData.cpf}</p>
+                            <p className='text-dark-emphasis'><strong>CPF:</strong> {userData.cpf}</p>
                         </div>
                         <div className="col-md-6">
-                            <p><strong>Tipo:</strong> {userData.type === 1 ? "Admin" : "User"}</p>
+                            <p className='text-dark-emphasis'><strong>Tipo:</strong> {userData.type === 1 ? "Admin" : "User"}</p>
                         </div>
                         <div className="col-md-6">
-                            <p><strong>Última Atualização:</strong> {new Date(userData.last_update).toLocaleDateString()}</p>
+                            <p className='text-dark-emphasis'><strong>Última Atualização:</strong> {new Date(userData.last_update).toLocaleDateString()}</p>
                         </div>
                         <div className="col-md-6">
-                            <p><strong>Data de Criação:</strong> {new Date(userData.created_at).toLocaleDateString()}</p>
+                            <p className='text-dark-emphasis'><strong>Data de Criação:</strong> {new Date(userData.created_at).toLocaleDateString()}</p>
                         </div>
                     </div>
 
                     {/* Seção de Configurações */}
-                    <Divider>Configurações</Divider>
+                    <Divider className='text-dark-emphasis'>Configurações</Divider>
 
                     <div className="row">
                         {/* Tema */}
                         <div className="col-md-4">
-                            <p><strong>Tema:</strong></p>
+                            <p className='text-dark-emphasis'><strong>Tema:</strong></p>
                             <SelectPicker
                                 data={[
                                     { label: 'Claro', value: 'light' },
@@ -158,7 +158,7 @@ export default function Perfil() {
 
                         {/* Idioma */}
                         <div className="col-md-4">
-                            <p><strong>Idioma:</strong></p>
+                            <p className='text-dark-emphasis'><strong>Idioma:</strong></p>
                             <SelectPicker
                                 data={[
                                     { label: 'Português', value: 'pt-BR' },
@@ -173,7 +173,7 @@ export default function Perfil() {
 
                         {/* Anonimato */}
                         <div className="col-md-4">
-                            <p><strong>Perfil Anônimo:</strong></p>
+                            <p className='text-dark-emphasis'><strong>Perfil Anônimo:</strong></p>
                             <Toggle
                                 checked={isAnonymous}
                                 onChange={setIsAnonymous}

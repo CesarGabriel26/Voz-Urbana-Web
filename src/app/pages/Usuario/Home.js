@@ -65,7 +65,7 @@ export default function Home() {
       </section>
 
       <section style={{ padding: 15, minHeight: 300 }} >
-        <h3 className='primary-text mb-3' >Reclamações Recentes</h3>
+        <h3 className='text-primary-emphasis mb-3' >Reclamações Recentes</h3>
 
         <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll' }} >
           {
@@ -79,7 +79,7 @@ export default function Home() {
       </section>
 
       <section style={{ padding: 15, minHeight: 300 }} >
-        <h3 className='primary-text mb-3' >Abaixo Assinados Recentes</h3>
+        <h3 className='text-primary-emphasis mb-3' >Abaixo Assinados Recentes</h3>
 
         <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll' }} >
           {

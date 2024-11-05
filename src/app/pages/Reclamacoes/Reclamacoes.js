@@ -90,7 +90,7 @@ export default function Reclamacoes() {
     <BaseContainer flex={true} footer={false}  >
       {/* Seção de Reclamações */}
       <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }} className='border-primary'>
-        <h3 className='text-primary mb-3'>Reclamações Recentes</h3>
+        <h3 className='text-primary-emphasis mb-3'>Reclamações Recentes</h3>
 
         {/* Barra de pesquisa */}
         <Input
@@ -118,7 +118,7 @@ export default function Reclamacoes() {
                     ]}
                   />
                 ))
-              ) : <p>Nenhuma reclamação encontrada.</p>
+              ) : <p className='text-dark-emphasis' >Nenhuma reclamação encontrada.</p>
             ) : <Loader size="md" />
           }
         </div>

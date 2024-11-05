@@ -74,33 +74,33 @@ export default function NovoAbaixoAssinado() {
             onSubmit={handleSubmit}
           >
             <Form.Group controlId="Causa">
-              <Form.ControlLabel>Causa / Titulo</Form.ControlLabel>
+              <Form.ControlLabel className='text-primary-emphasis bold'>Causa / Titulo</Form.ControlLabel>
               <Form.Control
                 name="Causa"
                 onChange={(value) => handleChange('title', value)}
               />
-              <Form.HelpText>required</Form.HelpText>
+              <Form.HelpText className='text-dark-emphasis'>required</Form.HelpText>
             </Form.Group>
             <Form.Group controlId="Assinatiras">
-              <Form.ControlLabel>Assinatiras</Form.ControlLabel>
+              <Form.ControlLabel className='text-primary-emphasis bold'>Assinatiras</Form.ControlLabel>
               <Form.Control
                 name="Assinatiras" type='number' min={100000} value={formData.required_signatures}
                 onChange={(value) => handleChange('required_signatures', value)}
               />
-              <Form.HelpText>required</Form.HelpText>
+              <Form.HelpText className='text-dark-emphasis'>required</Form.HelpText>
             </Form.Group>
             <Form.Group controlId="Motivo">
-              <Form.ControlLabel>Explique o motivo detalhadamente</Form.ControlLabel>
+              <Form.ControlLabel className='text-primary-emphasis bold'>Explique o motivo detalhadamente</Form.ControlLabel>
               <Form.Control
                 style={{ resize: 'none' }} rows={10} name="Motivo" accepter={Textarea}
                 onChange={(value) => handleChange('content', value)}
               />
-              <Form.HelpText >required</Form.HelpText>
+              <Form.HelpText className='text-dark-emphasis'>required</Form.HelpText>
             </Form.Group>
             <Form.Group>
               <ButtonToolbar>
-                <Button className='btn btn-primary' type='submit' >Submit</Button>
-                <Button className="btn btn-danger" onClick={() => navigate(-1)} >Cancel</Button>
+                <button className='btn btn-primary' type='submit' >Enviar</button>
+                <button className="btn btn-danger" onClick={() => navigate(-1)} >Cancelar</button>
               </ButtonToolbar>
             </Form.Group>
           </Form>
