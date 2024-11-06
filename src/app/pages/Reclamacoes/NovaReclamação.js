@@ -8,6 +8,7 @@ import { getLatLongFromAddress } from '../../utils/LatLong';
 import BaseContainer from '../../components/BaseContainer';
 import DecodeToken from '../../utils/JWT';
 import { createReport, uploadImage } from '../../utils/Api';
+import { loadCurrentUserData } from '../../controllers/userController';
 
 L.Icon.Default.imagePath = 'leaflet/dist/images/';
 
@@ -113,10 +114,12 @@ export default function NovaReclamação() {
         try {
             await buscarEndereco()
 
-            let tk = localStorage.getItem('usuario')
-            let us = DecodeToken(tk)
+            const [user, ok] = loadCurrentUserData();
+            if (!ok) {
+                return
+            }
 
-            let img = await uploadImage(formData.image, us.nome)
+            let img = await uploadImage(formData.image, user.nome)
 
             const reportData = {
                 latitude: position[0],
@@ -124,7 +127,7 @@ export default function NovaReclamação() {
                 titulo: formData.titulo,
                 conteudo: formData.problema,
                 imagem: img,
-                user_id: us.id,
+                user_id: user.id,
                 data: new Date().toISOString(),
                 adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
                 prioridade: 5,
@@ -230,8 +233,8 @@ export default function NovaReclamação() {
                         )}
                     </div>
 
-                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
-                        <Form.Group controlId="numero" style={{ flex: 1, width: '100%' }}>
+                    <div className='row' >
+                        <Form.Group className='col-12 col-md-6' controlId="numero" >
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Número</Form.ControlLabel>
                             <Form.Control
                                 name="numero"
@@ -243,7 +246,7 @@ export default function NovaReclamação() {
                             />
                         </Form.Group>
 
-                        <Form.Group controlId="rua" style={{ flex: 1, width: '100%' }}>
+                        <Form.Group className='col-12 col-md-6' controlId="rua" >
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Rua</Form.ControlLabel>
                             <Form.Control
                                 name="rua"
@@ -256,8 +259,8 @@ export default function NovaReclamação() {
                         </Form.Group>
                     </div>
 
-                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
-                        <Form.Group controlId="cep" style={{ flex: 1, width: '100%' }}>
+                    <div className='row' >
+                        <Form.Group className='col-12 col-md-6' controlId="cep">
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>CEP</Form.ControlLabel>
                             <Form.Control
                                 name="cep"
@@ -268,7 +271,7 @@ export default function NovaReclamação() {
                             />
                         </Form.Group>
 
-                        <Form.Group controlId="cidade" style={{ flex: 1, width: '100%' }}>
+                        <Form.Group className='col-12 col-md-6' controlId="cidade">
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Cidade</Form.ControlLabel>
                             <Form.Control
                                 name="cidade"
@@ -281,8 +284,8 @@ export default function NovaReclamação() {
                         </Form.Group>
                     </div>
 
-                    <div style={{ display: 'flex', gap: 15, flexWrap: 'wrap' }}>
-                        <Form.Group controlId="estado" style={{ flex: 1, width: '100%' }}>
+                    <div className='row' >
+                        <Form.Group  className='col-12 col-md-6' controlId="estado">
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
                             <Form.Control
                                 name="estado"
@@ -294,7 +297,7 @@ export default function NovaReclamação() {
                             />
                         </Form.Group>
 
-                        <Form.Group controlId="pais" style={{ flex: 1, width: '100%' }}>
+                        <Form.Group className='col-12 col-md-6' controlId="pais">
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>País</Form.ControlLabel>
                             <Form.Control
                                 name="pais"

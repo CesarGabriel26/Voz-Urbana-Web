@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const styles = {
     card: {
-        minWidth: 400,
+        minWidth: 200,
         padding: 20,
         borderRadius: 15,
         marginBottom: 15,
@@ -48,10 +48,15 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     {buttons?.map((btn, index) => (
                         <React.Fragment key={index}>
-                            <p className='text-light bt-link' style={styles.button} onClick={btn.onclick}>
+                            <p className='text-light bt-link d-none d-md-block' style={styles.button} onClick={btn.onclick}>
                                 {btn.text}
                             </p>
-                            {buttonsOptions?.hasDefault === false && index < buttons.length - 1 ? <span className='text-light'>|</span> : null}
+                            {
+                                buttonsOptions?.hasDefault === false ?
+                                    index < buttons.length - 1 ? <span className='text-light d-none d-md-block'>|</span> : null
+                                : <span className='text-light d-none d-md-block'>|</span>
+                            }
+
                         </React.Fragment>
                     ))}
                     {buttonsOptions?.hasDefault === false ? null : (

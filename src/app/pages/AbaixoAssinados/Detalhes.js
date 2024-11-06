@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { getPetitionById, getRemainingTimeForPetition, getUserById } from '../../utils/Api';
 import BaseContainer from '../../components/BaseContainer';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Steps, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
+import { Loader, Steps, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 import { useLocation } from 'react-router-dom';
 import { formatDate } from '../../utils/Parser';
-import { updatePetitionStatus } from '../../controllers/petitionController';
+import { loadCurrentUserData } from '../../controllers/userController';
+import ActionButtons from '../../components/ActionButtons';
 
 export default function VerPeticaoWeb() {
     const location = useLocation();
 
     const [petition, setPetition] = useState(null);
-    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState({});
+    const [currentUser, setCurrentUser] = useState(null);
 
     const loadPetitionDetails = async () => {
         try {
@@ -28,21 +30,24 @@ export default function VerPeticaoWeb() {
 
                     const userData = await getUserById(petitionDetails.content.user_id);
                     setUser(userData.content);
-
                 } else {
                     console.error('No content found in the response');
                 }
-                setLoading(false);
             }
+
+            const [user, ok] = loadCurrentUserData();
+            if (ok) {
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
+
+            setLoading(false);
         } catch (error) {
             setLoading(false);
             console.error('Error loading petition details:', error);
         }
     };
-
-    const handleApprove = () => updatePetitionStatus(petition, 1, true, ()=>{loadPetitionDetails()});
-    const handleReprove = () => updatePetitionStatus(petition, -1, true, ()=>{loadPetitionDetails()});
-    const handleEnd = () => updatePetitionStatus(petition, 0, false, ()=>{loadPetitionDetails()});
 
     useEffect(() => {
         loadPetitionDetails();
@@ -50,35 +55,38 @@ export default function VerPeticaoWeb() {
 
     return (
         <BaseContainer>
-            <div style={{ padding: 10 }} >
-                {loading && <p>Loading...</p>}
-                {petition ? (
-                    <Panel bordered shaded style={{ padding: 20, flex: 1 }}>
+            <div style={{ maxWidth: '100%', padding: 10 }}>
+                {loading && <Loader center content="Carregando detalhes..." />}
+                {petition && !loading ? (
+                    <Panel bordered shaded style={{ flex: 1}} >
                         {/* User Information Section */}
-                        <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                            <Avatar src={user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
-                            <div>
+                        <FlexboxGrid justify="space-between" align="middle" style={{ marginBottom: 20, flexWrap: 'wrap' }}>
+                            <FlexboxGrid.Item>
+                                <Avatar src={user.pfp} size="lg" circle alt='User Profile' />
+                            </FlexboxGrid.Item>
+                            <FlexboxGrid.Item style={{ maxWidth: '80%' }}>
                                 <p className='dark-text m-0'>Petição criada por: <strong>{user.nome}</strong></p>
                                 <p className='dark-text m-0'>Em: {formatDate(petition.data, true)}</p>
-                            </div>
-                        </section>
+                            </FlexboxGrid.Item>
+                        </FlexboxGrid>
                         <Divider />
 
                         {/* Petition Details */}
                         <section style={{ marginBottom: 20 }}>
                             <h2>{petition.titulo || 'Título da Petição'}</h2>
-                            <FlexboxGrid justify="start" align="top">
-                                <FlexboxGrid.Item style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
-                                    <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
-                                </FlexboxGrid.Item>
-                            </FlexboxGrid>
+                            <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
                         </section>
                         <Divider />
 
                         {/* Petition Status */}
                         <section>
                             <h3>Status da Petição</h3>
-                            <Steps current={petition.status === -1 ? 0 : petition.status} currentStatus={petition.status === -1 ? 'error' : 'process'} style={{ marginBottom: 20, marginTop: 20 }}>
+                            <Steps
+                                current={petition.status === -1 ? 0 : petition.status}
+                                currentStatus={petition.status === -1 ? 'error' : 'process'}
+                                style={{ marginBottom: 20, marginTop: 20 }}
+                                vertical={true}
+                            >
                                 <Steps.Item title="Aguardando aprovação" />
                                 <Steps.Item title="Coleta de assinaturas" />
                                 <Steps.Item title="Encerrada" />
@@ -96,25 +104,22 @@ export default function VerPeticaoWeb() {
                         <Divider />
                         <section style={{ marginBottom: 20 }}>
                             <h4>Informações Adicionais</h4>
-                            <p><strong>Data Limite:</strong> {petition.data_limite ? formatDate(petition.data_limite) : 'Não especificada'}</p>
-                            <p><strong>Data de Conclusão:</strong> {petition.data_conclusao ? formatDate(petition.data_conclusao) : 'Em andamento'}</p>
-                            <p><strong>Total de Apoios:</strong> {petition.total_apoios}</p>
+                            <p><strong>Data Limite:</strong> {petition.data_limite ? formatDate(petition.data_limite, true) : 'Não especificada'}</p>
+                            <p><strong>Atualizado em:</strong> {petition.data_ultima_atualizacao ? formatDate(petition.data_ultima_atualizacao, true) : 'Data não encontrada'}</p>
+                            <p><strong>Data de Conclusão:</strong> {petition.data_conclusao ? formatDate(petition.data_conclusao, true) : 'Em andamento'}</p>
                             <p><strong>Categoria:</strong> {petition.categoria || 'Não especificada'}</p>
                             <p><strong>Local:</strong> {petition.local || 'Não informado'}</p>
                             {petition.motivo_encerramento && (
                                 <p><strong>Motivo de Encerramento:</strong> {petition.motivo_encerramento}</p>
                             )}
+                            <p><strong>Apoiadores:</strong> {petition.apoiadores.length > 0 ? petition.apoiadores : "Ninguém apoiou ainda"}</p>
                         </section>
 
                         {/* Action Buttons */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
-                            <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
-                            <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
-                        </div>
+                        <ActionButtons petition={petition} reloadFunction={loadPetitionDetails} currentUser={currentUser} />
                     </Panel>
                 ) : (
-                    <p>Não foi possível carregar os detalhes da petição.</p>
+                    !loading && !petition? <p>Não foi possível carregar os detalhes da petição.</p> : null
                 )}
             </div>
         </BaseContainer>

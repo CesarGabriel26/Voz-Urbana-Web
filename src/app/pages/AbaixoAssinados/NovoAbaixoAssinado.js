@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Form, ButtonToolbar, Button, Panel, Input } from 'rsuite';
+import { Form, ButtonToolbar, Panel, Input } from 'rsuite';
 
 import BaseContainer from '../../components/BaseContainer';
 import DecodeToken from '../../utils/JWT';
 import { createPetition } from '../../utils/Api';
 import { useNavigate } from 'react-router-dom';
+import { loadCurrentUserData } from '../../controllers/userController';
 
 const Textarea = React.forwardRef((props, ref) => <Input {...props} as="textarea" ref={ref} />);
 
@@ -15,14 +16,17 @@ export default function NovoAbaixoAssinado() {
     'title': "",
     'content': "",
     'required_signatures': 1000,
-    'local' : ""
+    'local': ""
   });
   const [User, setUser] = useState(null);
 
   const Load = () => {
-    let tk = localStorage.getItem('usuario')
-    let user = DecodeToken(tk)
-    setUser(user)
+    const [user, ok] = loadCurrentUserData();
+    if (ok) {
+      setUser(user)
+    } else {
+      setUser(null)
+    }
 
   }
 
@@ -38,7 +42,7 @@ export default function NovoAbaixoAssinado() {
         'titulo': formData.title,
         'content': formData.content,
         'required_signatures': formData.required_signatures,
-        'local' : formData.local,
+        'local': formData.local,
       };
 
       let resp = await createPetition(formToSend);

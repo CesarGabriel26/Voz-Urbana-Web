@@ -9,7 +9,9 @@ import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
-import { updatePetitionStatus } from '../../controllers/petitionController';
+import { deletePetitionControl, updatePetitionSignatures, updatePetitionStatus } from '../../controllers/petitionController';
+import { loadCurrentUserData } from '../../controllers/userController';
+import ActionButtons from '../../components/ActionButtons';
 
 export default function AbaixoAssinados() {
 
@@ -58,8 +60,6 @@ export default function AbaixoAssinados() {
   const loadPetition = async (pet) => {
     setLoaded(false)
 
-    console.log(pet);
-
     let userResp = await getUserById(pet.user_id);
     setPetition(pet)
     setUser(userResp.content)
@@ -70,18 +70,13 @@ export default function AbaixoAssinados() {
   useEffect(() => {
     loadList()
 
-    let tk = localStorage.getItem('usuario') || null
-
-    if (tk) {
-      let user = DecodeToken(tk)
+    const [user, ok] = loadCurrentUserData();
+    if (ok) {
       setCurrentUser(user)
+    } else {
+      setCurrentUser(null)
     }
   }, [])
-
-  const handleApprove = () => updatePetitionStatus(petition, 1, true, ()=>{loadList()});
-  const handleReprove = () => updatePetitionStatus(petition, -1, true, ()=>{loadList()});
-  const handleEnd = () => updatePetitionStatus(petition, 0, false, ()=>{loadList()});
-
 
   return (
     <BaseContainer flex={true} footer={false}>
@@ -113,13 +108,10 @@ export default function AbaixoAssinados() {
                       searchTerm={searchTerm}
                       buttons={[
                         {
-                          text: <>Ver main <FaCaretRight /></>,
+                          text: <>Vsualizar </>,
                           onclick: () => { loadPetition(petition) }
                         }
                       ]}
-                      buttonsOptions={{
-                        hasDefault: false
-                      }}
                     />
                     : null
                 ))
@@ -181,21 +173,7 @@ export default function AbaixoAssinados() {
                 <Divider />
 
                 <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
-                  {
-                    (currentUser != null) ?
-                      (petition.aberto) ? <>
-                        <button
-                          className='mt-3 btn btn-primary'
-                        >
-                          Assinar
-                        </button>
-                      </> : <>
-                        <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
-                        <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
-                        <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
-                      </>
-                      : null
-                  }
+                  <ActionButtons petition={petition} reloadFunction={()=>{loadPetition(petition)}} currentUser={currentUser} />
                 </section>
 
               </Panel>

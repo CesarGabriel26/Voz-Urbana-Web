@@ -8,7 +8,8 @@ import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
-import { updatePetitionStatus } from '../../controllers/petitionController';
+import { deletePetitionControl, updatePetitionStatus } from '../../controllers/petitionController';
+import ActionButtons from '../../components/ActionButtons';
 
 export default function AbaixoAssinadosDoUsuario() {
   const [petitions, setPetitions] = useState([]);
@@ -56,20 +57,9 @@ export default function AbaixoAssinadosDoUsuario() {
     setLoaded(true);
   };
 
-  
 
-  const handleApprove = () => updatePetitionStatus(petition, 1, true, ()=>{loadList()});
-  const handleReprove = () => updatePetitionStatus(petition, -1, true, ()=>{loadList()});
-  const handleEnd = () => updatePetitionStatus(petition, 0, false, ()=>{loadList()});
-  const handleDelete = async () => {
-    const resp = await deletePetition(petition.id)
-    if (resp.error) {
-      console.log(resp.error);
-    } else {
-      loadList(); // Recarrega a lista após atualização
-      setPetition({})
-    }
-  }
+
+
 
   useEffect(() => {
     loadList();
@@ -101,7 +91,6 @@ export default function AbaixoAssinadosDoUsuario() {
                     text: <>Ver main <FaCaretRight /></>,
                     onclick: () => { loadPetition(petition); }
                   }]}
-                  buttonsOptions={{ hasDefault: false }}
                 />
               ))
             ) : <p className='text-dark-emphasis'>Nenhuma Petição encontrada.</p>
@@ -117,13 +106,21 @@ export default function AbaixoAssinadosDoUsuario() {
             petition ? (
               <Panel bordered shaded style={{ padding: 20, flex: 1 }}>
                 <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar src={user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
+                  <Avatar
+                    src={user.pfp}
+                    size="lg"
+                    circle
+                    alt='User Profile'
+                    style={{ marginRight: 20 }}
+                  />
                   <div>
                     <p className='dark-text m-0'>Petição criada por: <strong>{user.nome}</strong></p>
                     <p className='dark-text m-0'>Em: {formatDate(petition.data, true)}</p>
                   </div>
                 </section>
+
                 <Divider />
+
                 <section style={{ marginBottom: 20 }}>
                   <h2>{petition.titulo || 'Título da Petição'}</h2>
                   <FlexboxGrid justify="start" align="top">
@@ -132,27 +129,29 @@ export default function AbaixoAssinadosDoUsuario() {
                     </FlexboxGrid.Item>
                   </FlexboxGrid>
                 </section>
+
                 <Divider />
+
                 <section>
                   <h3>Status da Petição</h3>
-                  <Steps current={petition.status === -1 ? 0 : petition.status} currentStatus={petition.status === -1 ? 'error' : 'process'} style={{ marginBottom: 20, marginTop: 20 }}>
-                    <Steps.Item title="Aguardando aprovação" />
-                    <Steps.Item title="Coleta de assinaturas" />
-                    <Steps.Item title="Encerrada" />
-                  </Steps>
+
                   <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
+
                   <ProgressBar
                     style={{ marginBottom: 20, marginTop: 20 }}
                     now={(petition.signatures / petition.required_signatures) * 100}
-                    label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(2)}%`}
+                    label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
                   />
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
-                    <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
-                    <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button>
-                    <button className='btn btn-danger' onClick={handleDelete}>Apagar</button>
-                  </div>
+
+                  <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
                 </section>
+
+                <Divider />
+
+                <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
+                  <ActionButtons petition={petition} reloadFunction={() => { loadPetition(petition) }} currentUser={currentUser} />
+                </section>
+
               </Panel>
             ) : (
               <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4>
