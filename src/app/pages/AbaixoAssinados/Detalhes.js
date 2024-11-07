@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { formatDate } from '../../utils/Parser';
 import { loadCurrentUserData } from '../../controllers/userController';
 import ActionButtons from '../../components/ActionButtons';
+import SupportersList from '../../components/SupportersList ';
 
 export default function VerPeticaoWeb() {
     const location = useLocation();
@@ -24,6 +25,7 @@ export default function VerPeticaoWeb() {
 
                 const petitionDetails = await getPetitionById(id);
                 const remainingTime = await getRemainingTimeForPetition(id);
+                console.log(petitionDetails);
 
                 if (petitionDetails.content) {
                     setPetition({ ...petitionDetails.content, ...remainingTime });
@@ -112,7 +114,7 @@ export default function VerPeticaoWeb() {
                             {petition.motivo_encerramento && (
                                 <p><strong>Motivo de Encerramento:</strong> {petition.motivo_encerramento}</p>
                             )}
-                            <p><strong>Apoiadores:</strong> {petition.apoiadores.length > 0 ? petition.apoiadores : "Ninguém apoiou ainda"}</p>
+                            <SupportersList petition={petition} />
                         </section>
 
                         {/* Action Buttons */}

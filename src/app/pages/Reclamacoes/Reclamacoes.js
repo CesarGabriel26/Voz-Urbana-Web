@@ -89,7 +89,7 @@ export default function Reclamacoes() {
   return (
     <BaseContainer flex={true} footer={false}  >
       {/* Seção de Reclamações */}
-      <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }} className='border-primary'>
+      <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column'}}>
         <h3 className='text-primary-emphasis mb-3'>Reclamações Recentes</h3>
 
         {/* Barra de pesquisa */}
@@ -124,8 +124,10 @@ export default function Reclamacoes() {
         </div>
       </section>
 
+      <span class="border border-2 border-primary d-none d-md-block"></span>
+
       {/* Seção do Mapa */}
-      <section className='d-none d-md-block border-primary' style={{ flex: 1, borderLeftWidth: 2, borderLeftStyle: 'solid' }}>
+      <section className='d-none d-md-block' style={{ flex: 1,}}>
         {
           position ? (
             <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }} ref={mapRef} >

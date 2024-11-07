@@ -86,10 +86,7 @@ export default function ReclamacoesDoUsuario() {
 
     return (
         <BaseContainer flex={true} footer={false}>
-            <section
-                style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column', borderRight: '2px solid', borderColor: 'primary' }}
-                className='border-primary'
-            >
+            <section style={{ flex: 1, padding: 15, display: 'flex', flexDirection: 'column'}}>
                 <h3 className='text-primary-emphasis mb-3'>Suas Recentes</h3>
                 <Input
                     value={searchTerm}
@@ -119,10 +116,9 @@ export default function ReclamacoesDoUsuario() {
                 </div>
             </section>
 
-            <section
-                className='d-none d-md-block border-primary'
-                style={{ flex: 1, borderLeft: '2px solid', borderColor: 'primary' }}
-            >
+            <span class="border border-2 border-primary d-none d-md-block"></span>
+           
+            <section className='d-none d-md-block' style={{ flex: 1}} >
                 {
                     position ? (
                         <MapContainer center={position} zoom={18} style={{ width: '100%', height: '100%' }} ref={mapRef}>

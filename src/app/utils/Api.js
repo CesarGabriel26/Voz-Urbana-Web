@@ -287,21 +287,21 @@ export const uploadImage = async (imageUri, userName) => {
     const fileName = `${userName}_${currentDate}.jpg`; // Cria o nome do arquivo
 
     const formData = new FormData();
-    formData.append('imagem', {
-        uri: imageUri,
-        type: 'image/jpeg', // ou o tipo correto da imagem
-        name: fileName, // Nome dinâmico
-    });
+    // Se a imagem for uma base64, converta para Blob antes de enviar
+    const imageBlob = await fetch(imageUri)
+        .then((res) => res.blob())
+        .catch((err) => {
+            throw new Error('Erro ao converter base64 para blob: ' + err.message);
+        });
+
+    formData.append('imagem', imageBlob, fileName);
 
     const response = await fetch(`${URL}/imagem/upload`, {
         method: 'POST',
-        headers: {
-        },
         body: formData,
     });
 
     if (!response.ok) {
-        // Lida com possíveis erros
         const errorResponse = await response.json();
         throw new Error(`Erro ao enviar imagem: ${errorResponse.error || response.statusText}`);
     }

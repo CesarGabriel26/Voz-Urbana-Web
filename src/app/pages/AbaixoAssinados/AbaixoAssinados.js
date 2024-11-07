@@ -5,11 +5,8 @@ import { Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 import BaseContainer from '../../components/BaseContainer';
 import { listPetitions, getUserById } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
-import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
-import DecodeToken from '../../utils/JWT';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
-import { deletePetitionControl, updatePetitionSignatures, updatePetitionStatus } from '../../controllers/petitionController';
 import { loadCurrentUserData } from '../../controllers/userController';
 import ActionButtons from '../../components/ActionButtons';
 
@@ -81,8 +78,7 @@ export default function AbaixoAssinados() {
   return (
     <BaseContainer flex={true} footer={false}>
       <section
-        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
-        className='border-primary'
+        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column'}}
       >
         <h3 className='text-primary-emphasis mb-3'>Abaixo-Assinados Recentes</h3>
 
@@ -121,8 +117,10 @@ export default function AbaixoAssinados() {
         </div>
       </section>
 
+      <span class="border border-2 border-primary d-none d-md-block"></span>
+
       <section
-        className='d-none d-md-flex border-primary'
+        className='d-none d-md-flex'
         style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
       >
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >

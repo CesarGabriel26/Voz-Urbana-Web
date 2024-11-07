@@ -68,20 +68,19 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
                 }}>
                     {complaint.titulo}
                 </p>
-                <Highlight query={searchTerm}>
+                <Highlight query={searchTerm} style={{
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    WebkitLineClamp: 6, // Número de linhas que você quer mostrar
+                    wordBreak: 'break-word',
+                    margin: 0,
+                }}>
 
-                    <p className='dark-text' style={{
-                        maxHeight: 150,
-                        overflow: 'hidden',
-                        wordBreak: 'break-word',
-                        display: '-webkit-box',
-                        WebkitBoxOrient: 'vertical',
-                        WebkitLineClamp: 5,
-                        textOverflow: 'ellipsis',
-                        margin: 0,
-                    }}>
+                    <p className="dark-text" >
                         {complaint.conteudo}
                     </p>
+
                 </Highlight>
             </div>
         </div>

@@ -63,7 +63,7 @@ export default function Perfil() {
             setTimeout(() => setShowMessage(false), 2000);
         } catch (error) {
             console.log(error);
-            
+
         }
     };
 
@@ -75,7 +75,6 @@ export default function Perfil() {
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
-
     const handleSubmit = async () => {
         if (canEdit) {
             delete formData.senhaAtual;
@@ -85,11 +84,18 @@ export default function Perfil() {
             }
 
             let resp = await updateUser(userData.id, formData)
+
+            if (resp.error) {
+                console.log(resp.error);
+                return
+            }
+
             let tk = resp.content
             if (tk) {
                 localStorage.setItem('usuario', tk)
                 const user = DecodeToken(tk);
                 setUserData(user);
+
                 setFormData({
                     nome: user.nome,
                     email: user.email,
@@ -98,6 +104,8 @@ export default function Perfil() {
                     cpf: user.cpf,
                     senhaAtual: ''
                 });
+
+                window.location.reload()
             }
 
 
@@ -105,6 +113,7 @@ export default function Perfil() {
             setShowMessage(true);
             setTimeout(() => setShowMessage(false), 2000);
         } else {
+            console.log(userData);
             const isPasswordValid = await verifyPassword(userData.id, formData.senhaAtual);
 
             setCanEdit(isPasswordValid)
@@ -115,6 +124,7 @@ export default function Perfil() {
             }
         }
     };
+
 
     return (
         <BaseContainer>
@@ -208,8 +218,6 @@ export default function Perfil() {
                         </button>
                     </div>
 
-
-
                     {/* Modal de Edição */}
                     <Modal open={editing} onClose={handleEditToggle}>
                         <Modal.Header>
@@ -237,6 +245,13 @@ export default function Perfil() {
                                         onChange={(value) => handleInputChange('pfp', value)}
                                         style={{ marginBottom: 10 }}
                                     />
+                                    <input
+                                        disabled
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ marginBottom: 10 }}
+                                    />
+                                    <Avatar src={formData.pfp} size='lg' />
                                     <Input
                                         placeholder="Nova Senha"
                                         type="password"
@@ -253,7 +268,6 @@ export default function Perfil() {
                                     />
                                 </>
                             }
-
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={handleSubmit} appearance="primary">Salvar</Button>

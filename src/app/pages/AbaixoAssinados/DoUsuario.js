@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Steps, Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
+import {  Loader, Input, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
 import BaseContainer from '../../components/BaseContainer';
-import { getUserById, getPetitionsByUser, updatePetition, deletePetition } from '../../utils/Api';
+import { getUserById, getPetitionsByUser } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../../utils/Parser';
 import DecodeToken from '../../utils/JWT';
-import { ADMIN_USER_TYPE } from '../../utils/consts';
-import { deletePetitionControl, updatePetitionStatus } from '../../controllers/petitionController';
 import ActionButtons from '../../components/ActionButtons';
 
 export default function AbaixoAssinadosDoUsuario() {
@@ -67,8 +65,7 @@ export default function AbaixoAssinadosDoUsuario() {
 
   return (
     <BaseContainer flex={true} footer={false}>
-      <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }}
-        className='border-primary'
+      <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column'}}
       >
         <h3 className='text-primary-emphasis mb-3'>Reclamações Recentes</h3>
 
@@ -98,8 +95,10 @@ export default function AbaixoAssinadosDoUsuario() {
         </div>
       </section>
 
+      <span class="border border-2 border-primary d-none d-md-block"></span>
+
       <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column' }}
-        className='d-none d-md-flex border-primary'
+        className='d-none d-md-flex'
       >
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >
           {loaded ? (

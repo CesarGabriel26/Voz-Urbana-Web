@@ -23,7 +23,7 @@ export default function NavigationBar() {
     useEffect(() => { checkUser(); }, []);
 
     return (
-        <Navbar collapseOnSelect expand="sm" className='bg-primary' style={{ paddingLeft: 25, paddingRight: 25}}>
+        <Navbar collapseOnSelect expand="sm" className='bg-primary text-light' style={{ paddingLeft: 25, paddingRight: 25}}>
             <Navbar.Toggle aria-controls="navBar" data-bs-target="#navBar" />
             <Navbar.Brand className='text-light '>
                 <div className='d-flex d-none d-sm-block'>

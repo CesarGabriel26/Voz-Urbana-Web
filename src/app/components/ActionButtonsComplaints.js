@@ -1,9 +1,11 @@
-import { useState } from "react";
 import { ADMIN_USER_TYPE } from "../utils/consts";
-import { useEffect } from "react";
 import { deleteComplaintControl, updateComplaintStatus } from "../controllers/complaintController";
+import { useNavigate } from 'react-router-dom';
+import { deleteImage } from "../utils/Api";
 
-export default function ActionButtonsComplaints({ complaint, reloadFunction, currentUser, buttonOptions }) {
+export default function ActionButtonsComplaints({ complaint, reloadFunction, currentUser, buttonOptions, }) {
+    const navigate = useNavigate();
+    
     const handleApprove = () => updateComplaintStatus(complaint, 1, true, () => { reloadFunction() });
     const handleReprove = () => updateComplaintStatus(complaint, -1, true, () => { reloadFunction() });
 
@@ -12,7 +14,13 @@ export default function ActionButtonsComplaints({ complaint, reloadFunction, cur
     }
 
     const handleEnd = () => updateComplaintStatus(complaint, 0, false, () => { reloadFunction() });
-    const handleDelete = () => deleteComplaintControl(complaint, () => { reloadFunction() })
+    const handleDelete = () => deleteComplaintControl(complaint, async() => {  
+        let res = await deleteImage(complaint.imagem)
+        
+        if (res.success) {
+            navigate("/");
+        }
+     })
 
     return (
         <div style={{ display: 'flex', gap: 25, flexWrap: 'wrap'}}>

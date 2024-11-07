@@ -18,7 +18,6 @@ export const updatePetitionSignatures = async (petition, loadList, user) => {
     let apoiadores = petition.apoiadores
     apoiadores.push(user.id)
     
-
     const resp = await updatePetition(petition.id, petition);
 
     if (resp.error) {

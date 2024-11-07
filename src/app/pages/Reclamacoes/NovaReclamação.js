@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Form, Input, Button, ButtonToolbar } from 'rsuite';
+import { Form, Input, ButtonToolbar } from 'rsuite';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import L from 'leaflet';
 import { getLatLongFromAddress } from '../../utils/LatLong';
 import BaseContainer from '../../components/BaseContainer';
-import DecodeToken from '../../utils/JWT';
 import { createReport, uploadImage } from '../../utils/Api';
 import { loadCurrentUserData } from '../../controllers/userController';
 
@@ -85,11 +84,6 @@ export default function NovaReclamação() {
     }, [ObterLocalizacao]);
 
     const MapClickHandler = () => {
-        useMapEvent({
-            click(e) {
-                setPosition([e.latlng.lat, e.latlng.lng]);
-            }
-        });
         return null;
     };
 
@@ -97,7 +91,6 @@ export default function NovaReclamação() {
         try {
             // formData.numero, formData.cep
             if (formData.rua === "" && formData.cidade === "", formData.estado === "", formData.pais === "") {
-                alert('preencha todos os campos ')
                 return
             }
 
@@ -118,7 +111,6 @@ export default function NovaReclamação() {
             if (!ok) {
                 return
             }
-
             let img = await uploadImage(formData.image, user.nome)
 
             const reportData = {
@@ -126,7 +118,7 @@ export default function NovaReclamação() {
                 longitude: position[1],
                 titulo: formData.titulo,
                 conteudo: formData.problema,
-                imagem: img,
+                imagem: img.content.url,
                 user_id: user.id,
                 data: new Date().toISOString(),
                 adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
@@ -155,7 +147,7 @@ export default function NovaReclamação() {
     return (
         <BaseContainer footer={false} flex={true}>
             <Form onSubmit={handleSubmit} className='d-block d-md-flex' style={{ flex: 1, margin: 0 }}>
-                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', borderRightWidth: 2, borderRightStyle: 'solid' }} className='border-primary'>
+                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column' }} >
                     <h3 className='text-primary-emphasis mb-3'>Crie uma nova reclamação</h3>
 
                     <Form.Group controlId="titulo" >
@@ -209,7 +201,9 @@ export default function NovaReclamação() {
                     </Form.Group>
                 </section>
 
-                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', borderLeftWidth: 2, borderLeftStyle: 'solid' }} className='border-primary'>
+                <span class="border border-2 border-primary d-none d-md-block"></span>
+
+                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <h3 className='text-primary-emphasis mb-3'>Informações do local</h3>
 
                     <div style={{ width: "100%", height: 300 }}>
@@ -285,7 +279,7 @@ export default function NovaReclamação() {
                     </div>
 
                     <div className='row' >
-                        <Form.Group  className='col-12 col-md-6' controlId="estado">
+                        <Form.Group className='col-12 col-md-6' controlId="estado">
                             <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Estado</Form.ControlLabel>
                             <Form.Control
                                 name="estado"

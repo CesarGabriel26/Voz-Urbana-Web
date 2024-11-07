@@ -66,7 +66,12 @@ export default function DetalhesReclamacao() {
 
                         {/* Complaint Details */}
                         <section style={{ marginBottom: 20 }}>
-                            <h2>{complaint.titulo || 'Título da Reclamação'}</h2>
+                            <h2 className='d-none d-md-block'>
+                                {complaint.titulo || 'Título da Reclamação'}
+                            </h2>
+                            <h2 className='d-block d-md-none' >
+                                <marquee direction="left">{complaint.titulo || 'Título da Reclamação'}</marquee>
+                            </h2>
                             <Row>
                                 <Col xs={24} md={12}>
                                     <img
