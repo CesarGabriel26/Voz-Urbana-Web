@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../utils/Parser';
 import { useNavigate } from 'react-router-dom';
@@ -30,11 +30,17 @@ const styles = {
     },
 };
 
-export default function ReportCard({ complaint, searchTerm, buttons, buttonsOptions }) {
+export default function ReportCard({ style, complaint, searchTerm, buttons, buttonsOptions }) {
     const navigate = useNavigate();
 
+    const [textColor, setTextColor] = useState("text-dark")
+
+    useEffect(() => {
+        setTextColor(localStorage.getItem('theme') === "light" ? 'text-dark' : 'text-light')
+    }, [])
+
     return (
-        <div className='bg-primary' style={styles.card}>
+        <div className='bg-primary' style={{ ...styles.card, ...style }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <p className='text-light' style={styles.cardText}>{formatDate(complaint.data, true)}</p>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -56,33 +62,36 @@ export default function ReportCard({ complaint, searchTerm, buttons, buttonsOpti
                 </div>
             </div>
             <div className='bg-body' style={styles.cardBody}>
-                <p className='dark-text bold' style={{
-                    maxHeight: 150,
-                    overflow: 'hidden',
-                    wordBreak: 'break-word',
+                <p className={`${textColor} bold`} style={{
                     display: '-webkit-box',
                     WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    textOverflow: 'ellipsis',
-                    marginBottom: 2
+                    overflow: 'hidden',
+                    WebkitLineClamp: 1,
+                    wordBreak: 'break-word',
+                    marginBottom: 5,
                 }}>
                     {complaint.titulo}
                 </p>
-                <Highlight query={searchTerm} style={{
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    WebkitLineClamp: 6, // Número de linhas que você quer mostrar
-                    wordBreak: 'break-word',
-                    margin: 0,
-                }}>
+                <Highlight
+                    className={textColor}
+                    query={searchTerm}
+                    style={{
+                        maxHeight: 100,
+                        overflow: 'hidden',
+                        wordBreak: 'break-word',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 4,
+                        textOverflow: 'ellipsis',
+                    }}
+                >
 
-                    <p className="dark-text" >
+                    <p>
                         {complaint.conteudo}
                     </p>
 
                 </Highlight>
             </div>
-        </div>
+        </div >
     );
 }

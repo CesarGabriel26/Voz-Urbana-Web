@@ -3,6 +3,7 @@ import { Form, ButtonToolbar, Loader } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/LogoOutile.png';
+
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { createUser } from '../../utils/Api';
 
@@ -20,7 +21,7 @@ export default function SignUp() {
     const [Erro, setErro] = useState("");
 
     const handleSubmit = async (data) => {
-        setErro("");
+        setErro("   ");
 
         // Verifica se as senhas coincidem
         if (senha !== confirmarSenha) {
@@ -37,7 +38,7 @@ export default function SignUp() {
             'pfp': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLMI5YxZE03Vnj-s-sth2_JxlPd30Zy7yEGg&s',
             'cpf': cpf,
         };
-        
+
         // Chamada da API
         const response = await createUser(user);
         setLoading(false);
@@ -74,26 +75,24 @@ export default function SignUp() {
                 </h5>
             </div>
 
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                height: '100vh',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 50
-            }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100vh',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                    gap: 20
+                }}
+            >
                 <div
-                    className='border-primary'
+                    className='border-primary p-5'
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        paddingLeft: 100,
-                        paddingRight: 100,
-                        paddingTop: 25,
-                        paddingBottom: 25,
                         borderRadius: 10,
                         borderWidth: 2,
                         borderStyle: 'solid'
@@ -166,15 +165,17 @@ export default function SignUp() {
                                 </Form.ControlLabel>
                             </ButtonToolbar>
                         </Form.Group>
-                        <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <ButtonToolbar>
+                        <Form.Group >
+                            <ButtonToolbar style={{ display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }} >
                                 <button className='btn btn-primary' ><p className='m-0' >Login com <FaGoogle /></p></button>
                                 <button className='btn btn-primary' ><p className='m-0' >Login com <FaFacebook /></p></button>
                             </ButtonToolbar>
                         </Form.Group>
-                        <Form.Group style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }} >
-                            <button className='btn btn-primary' type="submit">Criar usuário</button>
-                            <button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</button>
+                        <Form.Group  >
+                            <ButtonToolbar style={{ display: 'flex', width: '100%', justifyContent: 'space-around', alignItems: 'center' }} >
+                                <button className='btn btn-primary' type="submit">Criar usuário</button>
+                                <button className='btn btn-primary' onClick={() => navigate(-1)} >Voltar</button>
+                            </ButtonToolbar>
                         </Form.Group>
                     </Form>
                 </div>

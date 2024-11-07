@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getUserById } from '../utils/Api';
 import { Avatar } from 'rsuite';
 
-export default function SupportersList({ petition }) {
+export default function SupportersList({ petition, theme }) {
     const [supporters, setSupporters] = useState([]);
 
     useEffect(() => {
@@ -21,13 +21,26 @@ export default function SupportersList({ petition }) {
         }
     }, [petition.apoiadores]);
 
+    // Define estilos condicionais baseados no tema
+    const textStyle = {
+        color: theme === 'dark' ? '#FFF' : '#000',
+    };
+
+    const listItemStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '10px',
+        borderRadius: '5px',
+        marginBottom: '5px',
+    };
+
     return (
-        <div>
-            <p><strong>Apoiadores:</strong></p>
+        <div style={{marginTop: 15}}>
+            <p style={textStyle}><strong>Apoiadores:</strong></p>
             {supporters.length > 0 ? (
                 <ul>
                     {supporters.map(supporter => (
-                        <li key={supporter.content.id} style={{ display: 'flex', alignItems: 'center' }} >
+                        <li key={supporter.content.id} style={listItemStyle}>
                             <Avatar
                                 src={supporter.content.pfp}
                                 alt={`${supporter.content.nome}'s profile`}
@@ -35,12 +48,14 @@ export default function SupportersList({ petition }) {
                                 circle
                                 style={{ marginRight: 10 }}
                             />
-                            {supporter.content.nome} ({supporter.content.email})
+                            <span style={textStyle}>
+                                {supporter.content.nome} ({supporter.content.email})
+                            </span>
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p>Ninguém apoiou ainda</p>
+                <p style={textStyle}>Ninguém apoiou ainda</p>
             )}
         </div>
     );

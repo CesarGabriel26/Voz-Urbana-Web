@@ -14,6 +14,7 @@ export default function DetalhesReclamacao() {
     const [user, setUser] = useState({});
     const [loaded, setLoaded] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [theme, setTheme] = useState("light"); // Adicionado para monitorar o tema
 
     const load = async () => {
         try {
@@ -48,6 +49,22 @@ export default function DetalhesReclamacao() {
         load();
     }, []);
 
+
+    useEffect(() => {
+        const currentTheme = localStorage.getItem('theme') || "light";
+        setTheme(currentTheme);
+
+        const handleThemeChange = () => {
+            setTheme(localStorage.getItem('theme') || "light");
+        };
+
+        window.addEventListener('storage', handleThemeChange);
+        return () => window.removeEventListener('storage', handleThemeChange);
+    }, []);
+
+    const textColorClass = theme === "light" ? "text-dark" : "text-light";
+
+
     return (
         <BaseContainer style={{ paddingTop: 10 }} footer={false}>
             <div style={{ maxWidth: '100%', padding: 10 }}>
@@ -57,8 +74,8 @@ export default function DetalhesReclamacao() {
                         <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                             <Avatar src={user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
                             <div>
-                                <p className='dark-text m-0'>Reclamação aberta por: <strong>{user.nome}</strong></p>
-                                <p className='dark-text m-0'>Em: {formatDate(complaint.data, true)}</p>
+                                <p className={`${textColorClass} m-0`}>Reclamação aberta por: <strong>{user.nome}</strong></p>
+                                <p className={`${textColorClass} m-0`}>Em: {formatDate(complaint.data, true)}</p>
                             </div>
                         </section>
 
@@ -66,10 +83,10 @@ export default function DetalhesReclamacao() {
 
                         {/* Complaint Details */}
                         <section style={{ marginBottom: 20 }}>
-                            <h2 className='d-none d-md-block'>
+                            <h2 className={`d-none d-md-block ${textColorClass}`}>
                                 {complaint.titulo || 'Título da Reclamação'}
                             </h2>
-                            <h2 className='d-block d-md-none' >
+                            <h2 className={`d-block d-md-none ${textColorClass}`}>
                                 <marquee direction="left">{complaint.titulo || 'Título da Reclamação'}</marquee>
                             </h2>
                             <Row>
@@ -82,7 +99,7 @@ export default function DetalhesReclamacao() {
                                     />
                                 </Col>
                                 <Col xs={24} md={12} style={{ paddingLeft: 20 }}>
-                                    <p className='dark-text' style={{ textAlign: 'justify' }}>{complaint.conteudo || 'Descrição do problema.'}</p>
+                                    <p className={`${textColorClass}`} style={{ textAlign: 'justify' }}>{complaint.conteudo || 'Descrição do problema.'}</p>
                                 </Col>
                             </Row>
                         </section>
@@ -91,7 +108,7 @@ export default function DetalhesReclamacao() {
 
                         {/* Complaint Status */}
                         <section>
-                            <h3>Status da Reclamação</h3>
+                            <h3 className={textColorClass}>Status da Reclamação</h3>
                             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                                 <Tag color={complaint.status === 1 ? 'green' : 'red'}>
                                     {complaint.status === 1 ? 'Aceito' : 'Pendente'}
@@ -106,9 +123,9 @@ export default function DetalhesReclamacao() {
                                 style={{ marginBottom: 20, marginTop: 20 }}
                                 vertical={true}
                             >
-                                <Steps.Item title="Aguardando aprovação" />
-                                <Steps.Item title="Sendo debatida / Analizada" />
-                                <Steps.Item title="Resolvida" />
+                                <Steps.Item title={<p className={`${textColorClass}`}>Aguardando aprovação</p>} />
+                                <Steps.Item title={<p className={`${textColorClass}`}>Sendo debatida / Analizada</p>} />
+                                <Steps.Item title={<p className={`${textColorClass}`}>Resolvida</p>} />
                             </Steps>
                         </section>
 
@@ -116,10 +133,10 @@ export default function DetalhesReclamacao() {
 
                         {/* Additional Information */}
                         <section style={{ marginBottom: 20 }}>
-                            <h4>Informações Adicionais</h4>
-                            <p><strong>Endereço:</strong> {complaint.adress || 'Não informado'}</p>
-                            <p><strong>Categoria:</strong> {complaint.categoria || 'Não especificada'}</p>
-                            <p><strong>Data de Conclusão:</strong> {complaint.aceito ? formatDate(complaint.data_conclusao, true) : 'Em andamento'}</p>
+                            <h4 className={textColorClass}>Informações Adicionais</h4>
+                            <p className={`${textColorClass}`}><strong>Endereço:</strong> {complaint.adress || 'Não informado'}</p>
+                            <p className={`${textColorClass}`}><strong>Categoria:</strong> {complaint.categoria || 'Não especificada'}</p>
+                            <p className={`${textColorClass}`}><strong>Data de Conclusão:</strong> {complaint.aceito ? formatDate(complaint.data_conclusao, true) : 'Em andamento'}</p>
                         </section>
 
                         {/* Action Buttons */}

@@ -72,7 +72,7 @@ export default function Home() {
             loaded ? (
               complaints.map((complaint, index) => (
                 complaint.aceito ? (
-                  <ReportCard complaint={complaint} key={index} />
+                  <ReportCard style={{maxWidth: 500,}} complaint={complaint} key={index} />
                 ) : null
               ))
             ) : <Loader size="md" />

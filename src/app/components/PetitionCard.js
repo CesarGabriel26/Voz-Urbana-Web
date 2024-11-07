@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCaretRight } from "react-icons/fa6";
 import { formatDate } from '../utils/Parser';
-import { Progress, Highlight} from 'rsuite';
+import { Progress, Highlight } from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 
 const styles = {
@@ -38,6 +38,11 @@ const styles = {
 
 export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, buttonsOptions, style }) {
     let navigate = useNavigate()
+    const [textColor, setTextColor] = useState("text-dark")
+
+    useEffect(() => {
+        setTextColor(localStorage.getItem('theme') === "light" ? 'text-dark' : 'text-light')
+    }, [])
 
     return (
         <div className='bg-primary' style={{ ...styles.card, ...style }}>
@@ -54,7 +59,7 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                             {
                                 buttonsOptions?.hasDefault === false ?
                                     index < buttons.length - 1 ? <span className='text-light d-none d-md-block'>|</span> : null
-                                : <span className='text-light d-none d-md-block'>|</span>
+                                    : <span className='text-light d-none d-md-block'>|</span>
                             }
 
                         </React.Fragment>
@@ -71,19 +76,20 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
             </div>
 
             <div className='bg-body' style={styles.cardBody}>
-                <p className='dark-text bold' style={{
-                    maxHeight: 150,
-                    overflow: 'hidden',
-                    wordBreak: 'break-word',
+                <p className={`${textColor} bold`} style={{
                     display: '-webkit-box',
                     WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    WebkitLineClamp: 1,
+                    wordBreak: 'break-word',
+                    marginBottom: 5,
                 }}>
                     {abaixoAssinado.titulo}
                 </p>
-                <Highlight query={searchTerm}>
-                    <p className='dark-text' style={{
+                <Highlight
+                    className={textColor}
+                    query={searchTerm}
+                    style={{
                         maxHeight: 100,
                         overflow: 'hidden',
                         wordBreak: 'break-word',
@@ -91,19 +97,21 @@ export default function PetitionCard({ abaixoAssinado, searchTerm, buttons, butt
                         WebkitBoxOrient: 'vertical',
                         WebkitLineClamp: 4,
                         textOverflow: 'ellipsis',
-                    }}>
+                    }}
+                >
+                    <p  >
                         {abaixoAssinado.content}
                     </p>
                 </Highlight>
                 <div style={styles.progressContainer}>
-                    <p className='dark-text' style={{ margin: 0 }}>{abaixoAssinado.signatures}</p>
+                    <p className={textColor} style={{ margin: 0 }}>{abaixoAssinado.signatures}</p>
                     <Progress.Line
                         percent={Math.min((abaixoAssinado.signatures / abaixoAssinado.required_signatures) * 100, 100)}
                         color={"red"}
                         showInfo={false}
                         style={{ flex: 1, margin: '0 10px' }}
                     />
-                    <p className='dark-text' style={{ margin: 0 }}>{abaixoAssinado.required_signatures}</p>
+                    <p className={textColor} style={{ margin: 0 }}>{abaixoAssinado.required_signatures}</p>
                 </div>
             </div>
         </div>

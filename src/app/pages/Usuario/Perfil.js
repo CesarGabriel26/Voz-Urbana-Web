@@ -50,6 +50,9 @@ export default function Perfil() {
                 senhaAtual: ''
             });
         }
+
+        let tm = localStorage.getItem('theme')
+        setTheme(tm)
     }, []);
 
     useEffect(() => {
@@ -57,14 +60,11 @@ export default function Perfil() {
     }, [theme]);
 
     const handleChangeTheme = (value) => {
-        try {
-            setTheme(value);
-            setShowMessage(true);
-            setTimeout(() => setShowMessage(false), 2000);
-        } catch (error) {
-            console.log(error);
+        localStorage.setItem('theme', value)
 
-        }
+        setTheme(value);
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 2000);
     };
 
     const handleEditToggle = () => {

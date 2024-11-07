@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NavigationRouter from './app/components/navigation';
 import L from 'leaflet';
 
@@ -16,12 +16,18 @@ import "react-toggle/style.css"
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
 function App() {
+  const setTheme = () => {
+    document.body.setAttribute("data-bs-theme", localStorage.getItem('theme'));
+  }
+
+  useEffect(()=>setTheme())
+
   return (
     <NavigationRouter />
   );

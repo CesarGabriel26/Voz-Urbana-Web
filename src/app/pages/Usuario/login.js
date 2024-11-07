@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, ButtonToolbar, Loader } from 'rsuite';
 
 import logo from '../../assets/LogoOutile.png';
+import logoFill from '../../assets/LogoHightResolution.png';
 
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 
@@ -64,12 +65,15 @@ export default function Login() {
     };
 
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '100%',
-            height: '100vh',
-        }} >
+        <div
+            className=' d-block d-md-flex'
+            style={{
+                display: 'flex',
+                flexDirection: 'row',
+                width: '100%',
+                height: '100vh',
+            }}
+        >
 
             <div className='bg-primary d-none d-md-flex' style={{
                 flexDirection: 'column',
@@ -78,7 +82,6 @@ export default function Login() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 textAlign: 'center',
-                padding: 50
             }} >
 
                 <img src={logo} alt='logo Voz Urbana' style={{ width: 140, height: 140 }} />
@@ -98,18 +101,38 @@ export default function Login() {
                 height: '100vh',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: 50,
-                flex: 1
+                flex: 1,
+                gap: 20
             }} >
                 <div
-                    className='border-primary'
+                    className='d-flex d-md-none'
+                    style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        padding: 15
+                    }}
+                >
+
+                    <img src={logoFill} alt='logo Voz Urbana' style={{ width: 75, height: 75 }} />
+
+                    <p className='text-dark'>Seja bem-vindo!</p>
+                    <p className='text-dark'>
+                        Acesse sua conta de modo fácil
+                        para poder aproveitar dos nossos
+                        serviços!
+                    </p>
+
+                </div>
+
+                <div
+                    className='border-primary ps-5 pe-5'
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        paddingLeft: 100,
-                        paddingRight: 100,
                         paddingTop: 25,
                         paddingBottom: 25,
                         borderRadius: 10,
