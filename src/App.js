@@ -23,10 +23,14 @@ L.Icon.Default.mergeOptions({
 
 function App() {
   const setTheme = () => {
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', 'light')
+    }
+
     document.body.setAttribute("data-bs-theme", localStorage.getItem('theme'));
   }
 
-  useEffect(()=>setTheme())
+  useEffect(() => setTheme())
 
   return (
     <NavigationRouter />

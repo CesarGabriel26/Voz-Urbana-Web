@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Form, Input, ButtonToolbar } from 'rsuite';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import L from 'leaflet';
@@ -90,7 +90,7 @@ export default function NovaReclamação() {
     const buscarEndereco = async () => {
         try {
             // formData.numero, formData.cep
-            if (formData.rua === "" && formData.cidade === "", formData.estado === "", formData.pais === "") {
+            if (formData.rua === "" && formData.cidade === "" && formData.estado === "" && formData.pais === "") {
                 return
             }
 
