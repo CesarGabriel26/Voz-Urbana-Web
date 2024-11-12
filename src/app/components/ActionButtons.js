@@ -4,7 +4,7 @@ import { ADMIN_USER_TYPE } from "../utils/consts";
 import { useEffect } from "react";
 
 export default function ActionButtons({ petition, reloadFunction, currentUser, buttonOptions }) {
-    const [podeAssinar, setPodeAssinar] = useState()
+    const [podeAssinar, setPodeAssinar] = useState(true)
 
     const handleApprove = () => updatePetitionStatus(petition, 1, true, () => { reloadFunction() });
     const handleReprove = () => updatePetitionStatus(petition, -1, true, () => { reloadFunction() });
@@ -22,7 +22,7 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
 
     useEffect(() => {
         setPodeAssinar(
-            currentUser.id === petition.user_id || petition.apoiadores.includes(currentUser.id)
+            !currentUser.id === petition.user_id && !petition.apoiadores.includes(currentUser.id)
         );
     }, [currentUser.id, petition.user_id, petition.apoiadores]);
 
@@ -40,7 +40,7 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
                                     </>
                                 ) : (
                                     <>
-                                        <button disabled={podeAssinar} className='btn btn-primary' onClick={handlesign}> Assinar </button>
+                                        <button disabled={!podeAssinar} className='btn btn-primary' onClick={handlesign}> Assinar </button>
                                         {
                                             ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === petition.user_id)) ? <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button> : <></>
                                         }

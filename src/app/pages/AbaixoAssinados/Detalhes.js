@@ -26,7 +26,6 @@ export default function VerPeticaoWeb() {
 
                 const petitionDetails = await getPetitionById(id);
                 const remainingTime = await getRemainingTimeForPetition(id);
-                console.log(petitionDetails);
 
                 if (petitionDetails.content) {
                     setPetition({ ...petitionDetails.content, ...remainingTime });
