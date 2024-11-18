@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Form, ButtonToolbar, Panel, Input } from 'rsuite';
 
 import BaseContainer from '../../components/BaseContainer';
-import DecodeToken from '../../utils/JWT';
 import { createPetition } from '../../utils/Api';
 import { useNavigate } from 'react-router-dom';
 import { loadCurrentUserData } from '../../controllers/userController';

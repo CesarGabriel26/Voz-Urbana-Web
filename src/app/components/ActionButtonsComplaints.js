@@ -29,7 +29,7 @@ export default function ActionButtonsComplaints({ complaint, reloadFunction, cur
                     (
                         <>
                             {
-                                (currentUser && currentUser.type == ADMIN_USER_TYPE && !complaint.aceito) ? (
+                                (currentUser && currentUser.type === ADMIN_USER_TYPE && !complaint.aceito) ? (
                                     <>
                                         <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
                                         <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
@@ -37,16 +37,16 @@ export default function ActionButtonsComplaints({ complaint, reloadFunction, cur
                                 ) : (
                                     <>
                                         {
-                                            ((currentUser && currentUser.type == ADMIN_USER_TYPE) || (currentUser.id === complaint.user_id)) ? <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button> : <></>
+                                            ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === complaint.user_id)) ? <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button> : <></>
                                         }
                                         {
-                                            ((currentUser && currentUser.type == ADMIN_USER_TYPE) && (complaint.aceito)) ? <button className='btn btn-warning' onClick={handleRevoke}>Revogar</button> : <></>
+                                            ((currentUser && currentUser.type === ADMIN_USER_TYPE) && (complaint.aceito)) ? <button className='btn btn-warning' onClick={handleRevoke}>Revogar</button> : <></>
                                         }
                                     </>
                                 )
                             }
                             {
-                                ((currentUser && currentUser.type == ADMIN_USER_TYPE) || (currentUser.id === complaint.user_id)) ? <button className='btn btn-danger' onClick={handleDelete}>Apagar</button> : <></>
+                                ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === complaint.user_id)) ? <button className='btn btn-danger' onClick={handleDelete}>Apagar</button> : <></>
                             }
                         </>
                     ) : <></>
