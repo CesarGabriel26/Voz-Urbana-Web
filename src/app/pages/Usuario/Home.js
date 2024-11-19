@@ -67,12 +67,12 @@ export default function Home() {
       <section style={{ padding: 15, minHeight: 300 }} >
         <h3 className='text-primary-emphasis mb-3' >Reclamações Recentes</h3>
 
-        <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll' }} >
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll', whiteSpace: 'nowrap' }} >
           {
             loaded ? (
               complaints.map((complaint, index) => (
                 complaint.aceito ? (
-                  <ReportCard style={{maxWidth: 500,}} complaint={complaint} key={index} />
+                  <ReportCard style={{ maxWidth: 500, }} complaint={complaint} key={index} />
                 ) : null
               ))
             ) : <Loader size="md" />
@@ -83,12 +83,12 @@ export default function Home() {
       <section style={{ padding: 15, minHeight: 300 }} >
         <h3 className='text-primary-emphasis mb-3' >Abaixo Assinados Recentes</h3>
 
-        <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll' }} >
+        <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll', whiteSpace: 'nowrap' }} >
           {
             loaded ? (
               abaixoAssinados.map((abaixoAssinado, index) => (
                 abaixoAssinado.aberto ? (
-                  <PetitionCard style={{maxWidth: 500,}} abaixoAssinado={abaixoAssinado} key={index} />
+                  <PetitionCard style={{ maxWidth: 500, }} abaixoAssinado={abaixoAssinado} key={index} />
                 ) : null
               ))
             ) : <Loader size="md" />

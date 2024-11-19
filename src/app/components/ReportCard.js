@@ -6,7 +6,7 @@ import { Highlight } from 'rsuite';
 
 const styles = {
     card: {
-        minWidth: 200,
+        minWidth: 500,
         padding: 20,
         borderRadius: 15,
         marginBottom: 15,

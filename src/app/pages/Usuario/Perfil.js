@@ -3,7 +3,7 @@ import { Panel, Avatar, Divider, SelectPicker, Toggle, Message, Input, Button, M
 import BaseContainer from '../../components/BaseContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DecodeToken from '../../utils/JWT';
-import { updateUser, verifyPassword } from '../../utils/Api';
+import { checkUserPassword, updateUser, verifyPassword } from '../../utils/Api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
@@ -114,7 +114,7 @@ export default function Perfil() {
             setTimeout(() => setShowMessage(false), 2000);
         } else {
             console.log(userData);
-            const isPasswordValid = await verifyPassword(userData.id, formData.senhaAtual);
+            const isPasswordValid = await checkUserPassword(userData.id, formData.senhaAtual);
 
             setCanEdit(isPasswordValid)
 
