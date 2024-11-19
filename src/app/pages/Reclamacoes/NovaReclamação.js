@@ -114,12 +114,12 @@ export default function NovaReclamação() {
             let img = await uploadImage(formData.image, user.nome)
 
             const reportData = {
+                user_id: user.id,
                 latitude: position[0],
                 longitude: position[1],
                 titulo: formData.titulo,
                 conteudo: formData.problema,
                 imagem: img.content.url,
-                user_id: user.id,
                 data: new Date().toISOString(),
                 adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
                 prioridade: 5,
