@@ -7,7 +7,7 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
     const [podeAssinar, setPodeAssinar] = useState(true)
 
     const handleApprove = () => updatePetitionStatus(petition, 1, true, () => { reloadFunction() });
-    const handleReprove = () => updatePetitionStatus(petition, -1, true, () => { reloadFunction() });
+    const handleReprove = () => updatePetitionStatus(petition, -1, false, () => { reloadFunction() });
 
     const handleRevoke = () => {
         petition.signatures = 0

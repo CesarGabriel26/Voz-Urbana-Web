@@ -70,6 +70,17 @@ export default function VerPeticaoWeb() {
     const textColorClass = theme === "light" ? "text-dark" : "text-light";
     const backgroundColorClass = theme === "light" ? "bg-light" : "bg-dark";
 
+    const randomPhoto = () => {
+        const pfps = [
+            "https://www.blookup.com/static/images/single/profile-1.edaddfbacb02.png",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vfeVHe1s6k-TnUkqzEjzkWNKzcXjcUWKz3E1XxM7svVTYmzAstIhhZaw1EAwKzBoeaw&usqp=CAU",
+        ]
+
+        const random = Math.floor(Math.random() * pfps.length);
+
+        return pfps[random]
+    }
+
     return (
         <BaseContainer>
             <div style={{ maxWidth: '100%', padding: 10 }}>
@@ -77,12 +88,12 @@ export default function VerPeticaoWeb() {
                 {petition && !loading ? (
                     <Panel className={backgroundColorClass} bordered shaded style={{ flex: 1 }}>
                         {/* User Information Section */}
-                        <FlexboxGrid justify="space-between" align="middle" style={{ marginBottom: 20, flexWrap: 'wrap' }}>
+                        <FlexboxGrid align="middle" style={{ marginBottom: 20, flexWrap: 'wrap', gap: 15 }}>
                             <FlexboxGrid.Item>
-                                <Avatar src={user.pfp} size="lg" circle alt='User Profile' />
+                                <Avatar src={user.anonimo ? randomPhoto() : user.pfp} size="lg" circle alt='User Profile' />
                             </FlexboxGrid.Item>
                             <FlexboxGrid.Item style={{ maxWidth: '80%' }}>
-                                <p className={`${textColorClass} m-0`}>Petição criada por: <strong>{user.nome}</strong></p>
+                                <p className={`${textColorClass} m-0`}>Petição criada por: <strong>{user.anonimo ? "XXXXXXXX" : user.nome}</strong></p>
                                 <p className={`${textColorClass} m-0`}>Em: {formatDate(petition.data, true)}</p>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>

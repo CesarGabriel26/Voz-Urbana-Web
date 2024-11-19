@@ -2,34 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { getUserById } from '../utils/Api';
 import { Avatar, Pagination } from 'rsuite';
 
-
 export default function SupportersList({ petition, theme }) {
     const [supporters, setSupporters] = useState([]);
-    const [currentSuportersList, setCurrentSUportersList] = useState([])
+    const [currentSupportersList, setCurrentSupportersList] = useState([]);
     const [activePage, setActivePage] = useState(1);
-
-    const [limit, setLimit] = React.useState(20);
-    const [numberOfPages, setNumberOfPages] = useState(1);
+    const [limit, setLimit] = useState(20); // Itens por página
 
     useEffect(() => {
         const fetchSupporters = async () => {
             try {
-                const promises = petition.apoiadores.map(id => getUserById(id));
+                const promises = petition.apoiadores.map((id) => getUserById(id));
                 const supportersData = await Promise.all(promises);
 
-                var a = []
-
-                for (let i = 0; i < 100; i++) {
-                    a.push(supportersData)
-
+                // Populando a lista de apoiadores
+                let a = [];
+                for (let i = 0; i < 105; i++) {
+                    a = [...a, ...supportersData];
                 }
 
                 setSupporters(a);
-                console.log(a);
-                
-
-                changePage(1)
-
+                changePage(1); // Define a página inicial
             } catch (error) {
                 console.error('Erro ao buscar os apoiadores:', error);
             }
@@ -40,7 +32,22 @@ export default function SupportersList({ petition, theme }) {
         }
     }, [petition.apoiadores]);
 
-    // Define estilos condicionais baseados no tema
+    // Função para trocar de página
+    const changePage = (page) => {
+        setActivePage(page);
+
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        setCurrentSupportersList(supporters.slice(start, end));
+    };
+
+    // Atualiza a página ao alterar o limite
+    useEffect(() => {
+        changePage(1); // Reinicia para a primeira página ao mudar o limite
+    }, [limit, supporters]);
+
+    // Estilo dinâmico baseado no tema
     const textStyle = {
         color: theme === 'dark' ? '#FFF' : '#000',
     };
@@ -51,24 +58,15 @@ export default function SupportersList({ petition, theme }) {
         padding: '10px',
         borderRadius: '5px',
         marginBottom: '5px',
-        minWidth: 200
-    };
-
-    const changePage = (page) => {
-        setActivePage(page);
-
-        const start = (page - 1) * limit;
-        const end = start + limit;
-
-        setCurrentSUportersList(supporters.slice(start, end));
+        minWidth: 200,
     };
 
     return (
         <div style={{ marginTop: 15 }}>
             <p style={textStyle}><strong>Apoiadores:</strong></p>
             {supporters.length > 0 ? (
-                <ul style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} >
-                    {currentSuportersList.map((supporter, i) => (
+                <ul style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {currentSupportersList.map((supporter, i) => (
                         <li key={i} style={listItemStyle}>
                             <Avatar
                                 src={supporter.content.pfp}
@@ -88,15 +86,17 @@ export default function SupportersList({ petition, theme }) {
             )}
 
             <Pagination
-                layout={['total', '|', 'pager', 'skip']}
+                layout={['pager', 'total', 'limit']}
                 size="xs"
-                prev={true}
-                next={true}
-                first={true}
-                last={true}
-                ellipsis={true}
-                boundaryLinks={true}
+                prev
+                next
+                first
+                last
+                ellipsis
+                boundaryLinks
                 total={supporters.length}
+                limit={limit}
+                limitOptions={[10, 20, 50, 100]} // Opções de itens por página
                 maxButtons={5}
                 activePage={activePage}
                 onChangePage={changePage}
@@ -104,4 +104,4 @@ export default function SupportersList({ petition, theme }) {
             />
         </div>
     );
-};
+}

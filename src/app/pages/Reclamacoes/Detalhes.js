@@ -64,6 +64,16 @@ export default function DetalhesReclamacao() {
 
     const textColorClass = theme === "light" ? "text-dark" : "text-light";
 
+    const randomPhoto = () => {
+        const pfps = [
+            "https://www.blookup.com/static/images/single/profile-1.edaddfbacb02.png",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-vfeVHe1s6k-TnUkqzEjzkWNKzcXjcUWKz3E1XxM7svVTYmzAstIhhZaw1EAwKzBoeaw&usqp=CAU",
+        ]
+
+        const random = Math.floor(Math.random() * pfps.length);
+
+        return pfps[random]
+    }
 
     return (
         <BaseContainer style={{ paddingTop: 10 }} footer={false}>
@@ -72,9 +82,9 @@ export default function DetalhesReclamacao() {
                     <Panel bordered shaded style={{ padding: 20 }}>
                         {/* User Information */}
                         <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                            <Avatar src={user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
+                            <Avatar src={user.anonimo ? randomPhoto() : user.pfp} size="lg" circle alt='User Profile' style={{ marginRight: 20 }} />
                             <div>
-                                <p className={`${textColorClass} m-0`}>Reclamação aberta por: <strong>{user.nome}</strong></p>
+                                <p className={`${textColorClass} m-0`}>Reclamação aberta por: <strong>{user.anonimo ? "XXXXXXXX" : user.nome}</strong></p>
                                 <p className={`${textColorClass} m-0`}>Em: {formatDate(complaint.data, true)}</p>
                             </div>
                         </section>
@@ -99,7 +109,7 @@ export default function DetalhesReclamacao() {
                                     />
                                 </Col>
                                 <Col xs={24} md={12} style={{ paddingLeft: 20 }}>
-                                    <p className={`${textColorClass}`} style={{ textAlign: 'justify' }}>{complaint.conteudo || 'Descrição do problema.'}</p>
+                                    <p className={`${textColorClass} mt-2 mt-md-0`} style={{ textAlign: 'justify', overflowY: 'scroll', maxHeight: "500px" }}>{complaint.conteudo || 'Descrição do problema.'}</p>
                                 </Col>
                             </Row>
                         </section>
@@ -136,7 +146,7 @@ export default function DetalhesReclamacao() {
                             <h4 className={textColorClass}>Informações Adicionais</h4>
                             <p className={`${textColorClass}`}><strong>Endereço:</strong> {complaint.adress || 'Não informado'}</p>
                             <p className={`${textColorClass}`}><strong>Categoria:</strong> {complaint.categoria || 'Não especificada'}</p>
-                            <p className={`${textColorClass}`}><strong>Data de Conclusão:</strong> {complaint.aceito ? formatDate(complaint.data_conclusao, true) : 'Em andamento'}</p>
+                            <p className={`${textColorClass}`}><strong>Data de Conclusão:</strong> {complaint.data_conclusao ? formatDate(complaint.data_conclusao, true) : 'Em andamento'}</p>
                         </section>
 
                         {/* Action Buttons */}
