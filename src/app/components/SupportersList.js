@@ -98,7 +98,6 @@ export default function SupportersList({ petition, theme }) {
                         gap: '15px',
                         padding: '0',
                         listStyleType: 'none',
-                        minHeight: limit > 2? 610 : 0
                     }}
                 >
                     {currentSupportersList.map((supporter, i) => (
