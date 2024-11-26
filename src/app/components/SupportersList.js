@@ -6,22 +6,45 @@ export default function SupportersList({ petition, theme }) {
     const [supporters, setSupporters] = useState([]);
     const [currentSupportersList, setCurrentSupportersList] = useState([]);
     const [activePage, setActivePage] = useState(1);
-    const [limit, setLimit] = useState(20); // Itens por página
+
+    const [limit, setLimit] = useState(20);
+    const [numberOfPages, setNumberOfPages] = useState(1);
+
+    // Responsividade: Ajusta o limite com base no tamanho da tela
+    useEffect(() => {
+        const handleResize = () => {
+            const newLimit = window.innerWidth < 768 ? 2 : 44;
+            setLimit(newLimit);
+        };
+
+        // Adiciona o listener de redimensionamento
+        window.addEventListener('resize', handleResize);
+
+        // Define o limite inicial
+        handleResize();
+
+        // Remove o listener quando o componente desmonta
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const fetchSupporters = async () => {
             try {
-                const promises = petition.apoiadores.map((id) => getUserById(id));
+                const promises = petition.apoiadores.map(id => getUserById(id));
                 const supportersData = await Promise.all(promises);
 
-                // Populando a lista de apoiadores
-                let a = [];
-                for (let i = 0; i < 105; i++) {
-                    a = [...a, ...supportersData];
-                }
+                // Após debug, remover preenchimento artificial
+                // var a = [];
 
-                setSupporters(a);
-                changePage(1); // Define a página inicial
+                // for (let i = 0; i < 50; i++) {
+                //     a = [...a, ...supportersData];
+                // }
+
+                setSupporters(supportersData);
+
+                // Atualizar página inicial
+                setActivePage(1);
+                changePage(1, supportersData, limit);
             } catch (error) {
                 console.error('Erro ao buscar os apoiadores:', error);
             }
@@ -32,40 +55,52 @@ export default function SupportersList({ petition, theme }) {
         }
     }, [petition.apoiadores]);
 
-    // Função para trocar de página
-    const changePage = (page) => {
-        setActivePage(page);
-
-        const start = (page - 1) * limit;
-        const end = start + limit;
-
-        setCurrentSupportersList(supporters.slice(start, end));
-    };
-
-    // Atualiza a página ao alterar o limite
     useEffect(() => {
-        changePage(1); // Reinicia para a primeira página ao mudar o limite
-    }, [limit, supporters]);
+        setNumberOfPages(Math.ceil(supporters.length / limit));
+        changePage(activePage, supporters, limit);
+    }, [supporters, limit]);
 
-    // Estilo dinâmico baseado no tema
     const textStyle = {
         color: theme === 'dark' ? '#FFF' : '#000',
     };
 
     const listItemStyle = {
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: '10px',
-        borderRadius: '5px',
-        marginBottom: '5px',
-        minWidth: 200,
+        borderRadius: '10px',
+        backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        marginBottom: '10px',
+        minWidth: '200px',
+        textAlign: 'center',
+    };
+
+    const changePage = (page, data = supporters, itemsPerPage = limit) => {
+        setActivePage(page);
+
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        setCurrentSupportersList(data.slice(start, end));
     };
 
     return (
         <div style={{ marginTop: 15 }}>
             <p style={textStyle}><strong>Apoiadores:</strong></p>
             {supporters.length > 0 ? (
-                <ul style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                <ul
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                        gap: '15px',
+                        padding: '0',
+                        listStyleType: 'none',
+                        minHeight: limit > 2? 610 : 0
+                    }}
+                >
                     {currentSupportersList.map((supporter, i) => (
                         <li key={i} style={listItemStyle}>
                             <Avatar
@@ -73,10 +108,11 @@ export default function SupportersList({ petition, theme }) {
                                 alt={`${supporter.content.nome}'s profile`}
                                 size="lg"
                                 circle
-                                style={{ marginRight: 10 }}
+                                style={{ marginBottom: 10 }}
                             />
                             <span style={textStyle}>
-                                {supporter.content.nome} ({supporter.content.email})
+                                <strong>{supporter.content.nome}</strong> <br />
+                                {supporter.content.email}
                             </span>
                         </li>
                     ))}
@@ -86,21 +122,20 @@ export default function SupportersList({ petition, theme }) {
             )}
 
             <Pagination
-                layout={['pager', 'total', 'limit']}
+                layout={limit > 2 ? ['total', '|', 'pager', 'skip'] : ['pager']}
                 size="xs"
                 prev
                 next
-                first
-                last
+                first={limit > 2}
+                last={limit > 2}
                 ellipsis
-                boundaryLinks
+                boundaryLinks={limit > 2}
                 total={supporters.length}
                 limit={limit}
-                limitOptions={[10, 20, 50, 100]} // Opções de itens por página
                 maxButtons={5}
                 activePage={activePage}
-                onChangePage={changePage}
-                onChangeLimit={setLimit}
+                onChangePage={(page) => changePage(page)}
+                onChangeLimit={(newLimit) => setLimit(newLimit)}
             />
         </div>
     );

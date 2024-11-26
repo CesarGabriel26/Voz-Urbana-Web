@@ -22,7 +22,7 @@ export default function BaseContainer({ children, flex = false, footer = true, s
                 <NavigationBar />
             </Header>
 
-            <Content style={{ paddingTop: isSticky ? 80 : 0, }}>
+            <Content style={{ paddingTop: isSticky ? 80 : 0, display: 'flex' }}>
                 <div style={{ ...style, display: flex ? 'flex' : 'block', flex: 1 }}>
                     {children}
                 </div>
