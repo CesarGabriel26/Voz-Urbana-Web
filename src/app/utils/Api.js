@@ -153,7 +153,7 @@ export const getPetitionsByUser = async (userId) => {
 
 export const updatePetition = async (id, petitionData) => {
     const response = await fetch(`${URL}/peticoes/update/${id}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
