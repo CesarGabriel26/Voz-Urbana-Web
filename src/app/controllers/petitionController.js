@@ -17,6 +17,7 @@ export const updatePetitionSignatures = async (petition, loadList, user) => {
     petition.signatures += 1
     let apoiadores = petition.apoiadores
     apoiadores.push(user.id)
+    petition.apoiadores = apoiadores
     
     const resp = await updatePetition(petition.id, petition);
 
