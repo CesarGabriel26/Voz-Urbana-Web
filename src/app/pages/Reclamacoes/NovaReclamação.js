@@ -122,7 +122,7 @@ export default function NovaReclamação() {
                 imagem: img.content.url,
                 data: new Date().toISOString(),
                 adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
-                prioridade: 5,
+                prioridade: 0,
             };
 
             let resp = await createReport(reportData)

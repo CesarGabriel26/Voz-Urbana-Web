@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Carousel, Loader } from 'rsuite';
+import { useNavigate } from 'react-router-dom';
 
 import mapPlaceHolder from '../../assets/mapPlaceHolder.png';
 import { listPetitions, listReports } from '../../utils/Api';
@@ -7,8 +8,11 @@ import { listPetitions, listReports } from '../../utils/Api';
 import PetitionCard from '../../components/PetitionCard';
 import ReportCard from '../../components/ReportCard';
 import BaseContainer from '../../components/BaseContainer';
+import PriorityCard from '../../components/PriorityCard';
 
 export default function Home() {
+  const navigate = useNavigate();
+
   const [complaints, setComplaints] = useState([]);
   const [abaixoAssinados, setAbaixoAssinados] = useState([]);
 
@@ -70,9 +74,22 @@ export default function Home() {
         <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll', whiteSpace: 'nowrap' }} >
           {
             loaded ? (
-              complaints.map((complaint, index) => (
+              complaints.map((complaint, i) => (
                 complaint.aceito ? (
-                  <ReportCard style={{ maxWidth: 500, }} complaint={complaint} key={index} />
+                  <>
+                    <PriorityCard
+                      key={i}
+                      prioridade={complaint.prioridade}
+                      tittle={complaint.titulo}
+                      date={complaint.data}
+                      content={complaint.conteudo}
+                      onPress={() => {
+                        navigate("/Complaint-Details", { state: { complaintId: complaint.id } })
+                      }}
+                      pressableText="ver mais"
+                      style={{ marginTop: i == 0 ? 20 : 0 }}
+                    />
+                  </>
                 ) : null
               ))
             ) : <Loader size="md" />
@@ -83,12 +100,31 @@ export default function Home() {
       <section style={{ padding: 15, minHeight: 300 }} >
         <h3 className='text-primary-emphasis mb-3' >Abaixo Assinados Recentes</h3>
 
-        <div style={{ display: 'flex', flexDirection: 'row', gap: 25, overflowX: 'scroll', whiteSpace: 'nowrap' }} >
+        <div
+          style={{
+            display: 'flex',
+            gap: 25,
+            overflowX: 'scroll', // Corrige o comportamento de scroll
+            whiteSpace: 'nowrap',
+            width: "100%"
+          }}
+        >
           {
             loaded ? (
-              abaixoAssinados.map((abaixoAssinado, index) => (
+              abaixoAssinados.map((abaixoAssinado, i) => (
                 abaixoAssinado.aberto ? (
-                  <PetitionCard style={{ maxWidth: 500, }} abaixoAssinado={abaixoAssinado} key={index} />
+                  <PriorityCard
+                    key={i}
+                    prioridade={abaixoAssinado.prioridade}
+                    tittle={abaixoAssinado.titulo}
+                    date={abaixoAssinado.data}
+                    content={abaixoAssinado.content}
+                    onPress={() => {
+                      navigate('/Abaixo-Assinados-Detalhes', { state: { petitionId: abaixoAssinado.id } })
+                    }}
+                    pressableText="ver mais"
+                    style={{ marginTop: i === 0 ? 20 : 0, display: 'inline-block' }}
+                  />
                 ) : null
               ))
             ) : <Loader size="md" />

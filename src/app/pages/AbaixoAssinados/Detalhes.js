@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { getPetitionById, getRemainingTimeForPetition, getUserById } from '../../utils/Api';
 import BaseContainer from '../../components/BaseContainer';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { Loader, Steps, Panel, FlexboxGrid, Avatar, Divider } from 'rsuite';
+import { Loader, Steps, Panel, FlexboxGrid, Avatar, Divider, Tag } from 'rsuite';
 import { useLocation } from 'react-router-dom';
 import { formatDate } from '../../utils/Parser';
 import { loadCurrentUserData } from '../../controllers/userController';
 import ActionButtons from '../../components/ActionButtons';
 import SupportersList from '../../components/SupportersList';
+import { priorities } from '../../utils/consts';
 
 export default function VerPeticaoWeb() {
     const location = useLocation();
+    const prioridades = [...priorities]
+    prioridades.shift()
+
 
     const [petition, setPetition] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -109,6 +113,14 @@ export default function VerPeticaoWeb() {
                         {/* Petition Status */}
                         <section>
                             <h3 className={`${textColorClass}`}>Status da Petição</h3>
+                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                                <Tag color={petition.status === 1 ? 'green' : 'red'}>
+                                    {petition.status === 1 ? 'Aceito' : 'Pendente'}
+                                </Tag>
+                                <Tag style={{ marginLeft: 10, backgroundColor: prioridades[petition.prioridade].color, color: prioridades[petition.prioridade].textColor }}>
+                                    Prioridade: {petition.prioridade}
+                                </Tag>
+                            </div>
                             <Steps
                                 current={petition.status === -1 ? 0 : petition.status}
                                 currentStatus={petition.status === -1 ? 'error' : 'process'}

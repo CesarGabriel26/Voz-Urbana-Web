@@ -9,8 +9,11 @@ import { formatDate } from '../../utils/Parser';
 import { ADMIN_USER_TYPE } from '../../utils/consts';
 import { loadCurrentUserData } from '../../controllers/userController';
 import ActionButtons from '../../components/ActionButtons';
+import PriorityCard from '../../components/PriorityCard';
+import { useNavigate } from 'react-router-dom';
 
 export default function AbaixoAssinados() {
+  const navigate = useNavigate();
 
   const [Petitions, setPetitions] = useState([]);
   const [petition, setPetition] = useState(null);
@@ -77,113 +80,138 @@ export default function AbaixoAssinados() {
 
   return (
     <BaseContainer flex={true} footer={false}>
-      
-      <section
-        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column'}}
-      >
-        <h3 className='text-primary-emphasis mb-3'>Abaixo-Assinados Recentes</h3>
+      <div style={{ maxHeight: 'calc(100vh - 92px)', display: 'flex', flexDirection: 'row', flex: 1 }}>
+        <section
+          style={{
+            padding: 15,
+            display: 'flex',
+            maxWidth: '100vw',
+            flexDirection: 'column',
+            flex: 1
+          }}
+        >
+          <div style={{ flex: 1 }} >
+            <h3 className='text-primary-emphasis mb-3'>Abaixo-Assinados Recentes</h3>
+            <Input
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Pesquisar reclamações..."
+              style={{ marginBottom: 15 }}
+            />
+            {error && <p className="text-danger">{error}</p>}
+          </div>
 
-        {/* Barra de pesquisa */}
-        <Input
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Pesquisar reclamações..."
-          style={{ marginBottom: 15 }}
-        />
-        {error && <p className="text-danger">{error}</p>}
 
-
-        <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 25, overflowY: 'scroll' }}>
-          {
-            loaded ? (
-              FilteredPetitions.length > 0 ? (
-                FilteredPetitions.map((petition, index) => (
-                  (petition.aberto || (currentUser && currentUser.type === ADMIN_USER_TYPE)) ?
-                    <PetitionCard
-                      key={index}
-                      abaixoAssinado={petition}
-                      searchTerm={searchTerm}
-                      buttons={[
-                        {
-                          text: <>Vsualizar </>,
-                          onclick: () => { loadPetition(petition) }
+          <div
+            style={{
+              flex: 6,
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {
+              loaded ? (
+                FilteredPetitions.length > 0 ? (
+                  FilteredPetitions.map((abaixoAssinado, i) => (
+                    (abaixoAssinado.aberto || (currentUser && currentUser.type === ADMIN_USER_TYPE)) ?
+                      <PriorityCard
+                        key={i}
+                        prioridade={abaixoAssinado.prioridade}
+                        tittle={abaixoAssinado.titulo}
+                        searchTerm={searchTerm}
+                        date={abaixoAssinado.data}
+                        content={abaixoAssinado.content}
+                        onPress={() => {
+                          navigate('/Abaixo-Assinados-Detalhes', { state: { petitionId: abaixoAssinado.id } })
+                        }}
+                        noMax={true}
+                        pressableText="ver mais"
+                        style={{ marginTop: i === 0 ? 20 : 0, display: 'inline-block' }}
+                        extraButtons={
+                          [
+                            {
+                              pressableText: "ver detalhes ao lado",
+                              onPress: () => {
+                                loadPetition(abaixoAssinado)
+                              }
+                            }
+                          ]
                         }
-                      ]}
+                      />
+                      : null
+                  ))
+                ) : <p className='text-dark-emphasis' >Nenhuma Petição encontrada.</p>
+              ) : <Loader size="md" />
+            }
+          </div>
+        </section>
+
+        <span class="border border-2 border-primary d-none d-md-block"></span>
+
+        <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column' }}
+          className='d-none d-md-flex'
+        >
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >
+            {loaded ? (
+              petition ? (
+                <Panel bordered shaded style={{ padding: 20, flex: 1 }}>
+                  <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+                    <Avatar
+                      src={user.pfp}
+                      size="lg"
+                      circle
+                      alt='User Profile'
+                      style={{ marginRight: 20 }}
                     />
-                    : null
-                ))
-              ) : <p className='text-dark-emphasis' >Nenhuma Petição encontrada.</p>
-            ) : <Loader size="md" />
-          }
-        </div>
-      </section>
+                    <div>
+                      <p className='dark-text m-0'>Petição criada por: <strong>{user.nome}</strong></p>
+                      <p className='dark-text m-0'>Em: {formatDate(petition.data, true)}</p>
+                    </div>
+                  </section>
 
-      <span class="border border-2 border-primary d-none d-md-block"></span>
+                  <Divider />
 
-      <section
-        className='d-none d-md-flex'
-        style={{ padding: 15, flexGrow: 1, flex: 1, display: 'flex', flexDirection: 'column' }}
-      >
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >
-          {loaded ? (
-            petition ? (
-              <Panel bordered shaded style={{ padding: 20, flex: 1 }}>
-                <section style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar
-                    src={user.pfp}
-                    size="lg"
-                    circle
-                    alt='User Profile'
-                    style={{ marginRight: 20 }}
-                  />
-                  <div>
-                    <p className='dark-text m-0'>Petição criada por: <strong>{user.nome}</strong></p>
-                    <p className='dark-text m-0'>Em: {formatDate(petition.data, true)}</p>
-                  </div>
-                </section>
+                  <section style={{ marginBottom: 20 }}>
+                    <h2>{petition.titulo || 'Título da Petição'}</h2>
+                    <FlexboxGrid justify="start" align="top">
+                      <FlexboxGrid.Item style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
+                        <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
+                      </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                  </section>
 
-                <Divider />
+                  <Divider />
 
-                <section style={{ marginBottom: 20 }}>
-                  <h2>{petition.titulo || 'Título da Petição'}</h2>
-                  <FlexboxGrid justify="start" align="top">
-                    <FlexboxGrid.Item style={{ paddingLeft: 20, minHeight: 150, flex: 1 }}>
-                      <p className='dark-text' style={{ textAlign: 'justify' }}>{petition.content || 'Descrição da causa.'}</p>
-                    </FlexboxGrid.Item>
-                  </FlexboxGrid>
-                </section>
+                  <section>
+                    <h3>Status da Petição</h3>
 
-                <Divider />
+                    <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
 
-                <section>
-                  <h3>Status da Petição</h3>
+                    <ProgressBar
+                      style={{ marginBottom: 20, marginTop: 20 }}
+                      now={(petition.signatures / petition.required_signatures) * 100}
+                      label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
+                    />
 
-                  <p>{petition.signatures} de {petition.required_signatures} assinaturas</p>
+                    <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
+                  </section>
 
-                  <ProgressBar
-                    style={{ marginBottom: 20, marginTop: 20 }}
-                    now={(petition.signatures / petition.required_signatures) * 100}
-                    label={`${((petition.signatures / petition.required_signatures) * 100).toFixed(1)}%`}
-                  />
+                  <Divider />
 
-                  <p>Data limite: {formatDate(petition.data_limite, true) || 'Não disponível'}</p>
-                </section>
+                  <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
+                    <ActionButtons petition={petition} reloadFunction={() => { loadPetition(petition) }} currentUser={currentUser} />
+                  </section>
 
-                <Divider />
+                </Panel>
 
-                <section style={{ display: 'flex', justifyContent: 'space-evenly' }} >
-                  <ActionButtons petition={petition} reloadFunction={()=>{loadPetition(petition)}} currentUser={currentUser} />
-                </section>
-
-              </Panel>
-
-            ) : <div> <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4> </div>
-          ) : (
-            <Loader content="Carregando detalhes..." />
-          )}
-        </div>
-      </section>
-
+              ) : <div> <h4 className='text-dark-emphasis'>Selecione uma petição para visualizar os detalhes.</h4> </div>
+            ) : (
+              <Loader content="Carregando detalhes..." />
+            )}
+          </div>
+        </section>
+      </div>
     </BaseContainer >
   );
 }

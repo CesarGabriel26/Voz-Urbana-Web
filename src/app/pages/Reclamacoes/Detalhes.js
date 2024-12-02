@@ -6,9 +6,13 @@ import { formatDate } from '../../utils/Parser';
 import BaseContainer from '../../components/BaseContainer';
 import { loadCurrentUserData } from '../../controllers/userController';
 import ActionButtonsComplaints from '../../components/ActionButtonsComplaints';
+import { priorities } from '../../utils/consts';
 
 export default function DetalhesReclamacao() {
     const location = useLocation();
+    const prioridades = [...priorities]
+    prioridades.shift()
+
 
     const [complaint, setComplaint] = useState({});
     const [user, setUser] = useState({});
@@ -123,8 +127,8 @@ export default function DetalhesReclamacao() {
                                 <Tag color={complaint.status === 1 ? 'green' : 'red'}>
                                     {complaint.status === 1 ? 'Aceito' : 'Pendente'}
                                 </Tag>
-                                <Tag color={complaint.prioridade === 1 ? 'orange' : 'blue'} style={{ marginLeft: 10 }}>
-                                    Prioridade: {complaint.prioridade === 1 ? 'Alta' : 'Normal'}
+                                <Tag style={{ marginLeft: 10, backgroundColor: prioridades[complaint.prioridade].color, color: prioridades[complaint.prioridade].textColor  }}>
+                                    Prioridade: {complaint.prioridade}
                                 </Tag>
                             </div>
                             <Steps
