@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { deletePetitionControl, updatePetitionSignatures, updatePetitionStatus } from "../controllers/petitionController";
+import { deletePetitionControl, updatePetitionPriority, updatePetitionSignatures, updatePetitionStatus } from "../controllers/petitionController";
 import { ADMIN_USER_TYPE } from "../utils/consts";
 import { useEffect } from "react";
 
-export default function ActionButtons({ petition, reloadFunction, currentUser, buttonOptions }) {
+export default function ActionButtons({ petition, reloadFunction, currentUser, buttonOptions, prioridade, setPrioridade }) {
     const [podeAssinar, setPodeAssinar] = useState(true)
 
     const handleApprove = () => updatePetitionStatus(petition, 1, true, () => { reloadFunction() });
@@ -19,6 +19,10 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
     const handleDelete = () => deletePetitionControl(petition, () => { reloadFunction() })
 
     const handlesign = () => updatePetitionSignatures(petition, () => { reloadFunction() }, currentUser);
+
+    const handleSetPriority = () => updatePetitionPriority(petition, prioridade, async () => {
+        reloadFunction()
+    })
 
     useEffect(() => {
         setPodeAssinar(
@@ -54,6 +58,32 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
                             }
                             {
                                 ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === petition.user_id)) ? <button className='btn btn-danger' onClick={handleDelete}>Apagar</button> : <></>
+                            }
+                            {
+                                (currentUser && currentUser.type === ADMIN_USER_TYPE) ? <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                                    <button className='btn btn-primary' onClick={handleSetPriority}>Definir Prioridade</button>
+                                    <input
+                                        style={{
+                                            marginLeft: 15,
+                                        }}
+                                        type="number"
+                                        min={0}
+                                        max={10}
+                                        value={prioridade}
+                                        onChange={(e) => {
+                                            let v = e.target.value
+                                            if (v > 10) {
+                                                v = 10
+                                            }
+
+                                            if (v < 0) {
+                                                v = 0
+                                            }
+
+                                            setPrioridade(Number(v));
+                                        }}
+                                    />
+                                </div> : <></>
                             }
                         </>
                     ) : <></>

@@ -1,24 +1,36 @@
 import { deleteReport, updateReport } from "../utils/Api";
 
 export const updateComplaintStatus = async (report, status, aceito, loadList) => {
-    report.status = status;
-    report.aceito = aceito;
+  report.status = status;
+  report.aceito = aceito;
 
-    const resp = await updateReport(report.id, report);
+  const resp = await updateReport(report.id, report);
 
-    if (resp.error) {
-        console.error(resp.error);
-        return
-    } 
-    loadList(); // Recarrega a lista após atualização
+  if (resp.error) {
+    console.error(resp.error);
+    return
+  }
+  loadList(); // Recarrega a lista após atualização
 };
 
 
 export const deleteComplaintControl = async (report, loadList) => {
-    const resp = await deleteReport(report.id)
-    if (resp.error) {
-      console.log(resp.error);
-    } else {
-      loadList(); // Recarrega a lista após atualização
-    }
+  const resp = await deleteReport(report.id)
+  if (resp.error) {
+    console.log(resp.error);
+  } else {
+    loadList(); // Recarrega a lista após atualização
   }
+}
+
+export const updateComplaintPriority = async (report, prioridade, loadList) => {
+  report.prioridade = prioridade
+
+  const resp = await updateReport(report.id, report);
+
+  if (resp.error) {
+    console.error(resp.error);
+    return
+  }
+  loadList(); // Recarrega a lista após atualização
+}

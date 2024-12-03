@@ -1,9 +1,9 @@
 import { ADMIN_USER_TYPE } from "../utils/consts";
-import { deleteComplaintControl, updateComplaintStatus } from "../controllers/complaintController";
+import { deleteComplaintControl, updateComplaintPriority, updateComplaintStatus } from "../controllers/complaintController";
 import { useNavigate } from 'react-router-dom';
 import { deleteImage } from "../utils/Api";
 
-export default function ActionButtonsComplaints({ complaint, reloadFunction, currentUser, buttonOptions, }) {
+export default function ActionButtonsComplaints({ complaint, reloadFunction, currentUser, buttonOptions, prioridade, setPrioridade }) {
     const navigate = useNavigate();
 
     const handleApprove = () => updateComplaintStatus(complaint, 1, true, () => { reloadFunction() });
@@ -20,6 +20,10 @@ export default function ActionButtonsComplaints({ complaint, reloadFunction, cur
         if (res.success) {
             navigate("/");
         }
+    })
+
+    const handleSetPriority = () => updateComplaintPriority(complaint, prioridade, async () => {
+        reloadFunction()
     })
 
     return (
@@ -49,6 +53,32 @@ export default function ActionButtonsComplaints({ complaint, reloadFunction, cur
                             }
                             {
                                 ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === complaint.user_id)) ? <button className='btn btn-danger' onClick={handleDelete}>Apagar</button> : <></>
+                            }
+                            {
+                                (currentUser && currentUser.type === ADMIN_USER_TYPE) ? <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                                    <button className='btn btn-primary' onClick={handleSetPriority}>Definir Prioridade</button>
+                                    <input
+                                        style={{ 
+                                            marginLeft: 15,
+                                         }}
+                                        type="number"
+                                        min={0}
+                                        max={10}
+                                        value={prioridade}
+                                        onChange={(e) => {
+                                            let v = e.target.value
+                                            if (v > 10) {
+                                                v = 10
+                                            }
+
+                                            if (v < 0) {
+                                                v = 0
+                                            }
+
+                                            setPrioridade(Number(v));
+                                        }}
+                                    />
+                                </div> : <></>
                             }
                         </>
                     ) : <></>

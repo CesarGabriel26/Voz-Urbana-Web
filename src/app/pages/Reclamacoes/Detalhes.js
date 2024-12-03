@@ -19,6 +19,7 @@ export default function DetalhesReclamacao() {
     const [loaded, setLoaded] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [theme, setTheme] = useState("light"); // Adicionado para monitorar o tema
+    const [priori, setPriori] = useState(0);
 
     const load = async () => {
         try {
@@ -29,6 +30,7 @@ export default function DetalhesReclamacao() {
                 let rest = await getReportById(id);
                 if (!rest.error) {
                     setComplaint(rest.content);
+                    setPriori(rest.content.prioridade)
                     rest = await getUserById(rest.content.user_id);
                     if (!rest.error) {
                         setUser(rest.content);
@@ -127,7 +129,7 @@ export default function DetalhesReclamacao() {
                                 <Tag color={complaint.status === 1 ? 'green' : 'red'}>
                                     {complaint.status === 1 ? 'Aceito' : 'Pendente'}
                                 </Tag>
-                                <Tag style={{ marginLeft: 10, backgroundColor: prioridades[complaint.prioridade].color, color: prioridades[complaint.prioridade].textColor  }}>
+                                <Tag style={{ marginLeft: 10, backgroundColor: prioridades[complaint.prioridade].color, color: prioridades[complaint.prioridade].textColor }}>
                                     Prioridade: {complaint.prioridade}
                                 </Tag>
                             </div>
@@ -154,7 +156,14 @@ export default function DetalhesReclamacao() {
                         </section>
 
                         {/* Action Buttons */}
-                        <ActionButtonsComplaints complaint={complaint} reloadFunction={load} currentUser={currentUser} />
+                        <ActionButtonsComplaints complaint={complaint} reloadFunction={load} currentUser={currentUser}
+                            prioridade={priori}
+                            setPrioridade={
+                                (v) => {
+                                    setPriori(v)
+                                }
+                            }
+                        />
                     </Panel>
                 ) : (
                     <Loader center content="Carregando detalhes..." />
