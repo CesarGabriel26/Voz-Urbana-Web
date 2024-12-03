@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Form, Input, ButtonToolbar } from 'rsuite';
+import { Form, Input, ButtonToolbar, SelectPicker } from 'rsuite';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
@@ -8,6 +8,7 @@ import { getLatLongFromAddress } from '../../utils/LatLong';
 import BaseContainer from '../../components/BaseContainer';
 import { createReport, uploadImage } from '../../utils/Api';
 import { loadCurrentUserData } from '../../controllers/userController';
+import { categories } from '../../utils/consts';
 
 L.Icon.Default.imagePath = 'leaflet/dist/images/';
 
@@ -28,10 +29,11 @@ export default function NovaReclamação() {
         image: null,
         numero: '',
         rua: '',
-        cidade: '',
-        estado: '',
+        cidade: 'Andradina',
+        estado: 'SP',
         cep: '',
         pais: 'Brasil',
+        categoria: 'Não Especificada'
     });
 
     useEffect(() => {
@@ -42,25 +44,36 @@ export default function NovaReclamação() {
 
     const ObterLocalizacao = useCallback(() => {
         let complaintLocation = location.state?.local;
+    
         if (complaintLocation) {
             setPosition(complaintLocation);
         } else if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const { latitude, longitude } = pos.coords;
-                    setPosition([latitude, longitude]);
-                },
-                (error) => {
-                    console.error("Erro na Geolocalização:", error);
-                    alert("Erro ao obter localização. Verifique as permissões.");
-                },
-                { timeout: 10000 }
-            );
+            navigator.permissions.query({ name: 'geolocation' }).then((permission) => {
+                if (permission.state === 'granted' || permission.state === 'prompt') {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            const { latitude, longitude } = pos.coords;
+                            setPosition([latitude, longitude]);
+                        },
+                        (error) => {
+                            console.error("Erro na Geolocalização:", error);
+                            alert("Erro ao obter localização. Por favor, verifique as permissões de localização.");
+                        },
+                        { timeout: 10000, enableHighAccuracy: true }
+                    );
+                } else {
+                    alert("Permissão de localização negada. Ative manualmente nas configurações do navegador.");
+                }
+            }).catch((err) => {
+                console.error("Erro ao verificar permissões:", err);
+                alert("Erro ao verificar permissões de localização.");
+            });
         } else {
             console.error("Geolocalização não está disponível.");
             alert("Geolocalização não está disponível no seu navegador.");
         }
     }, [location.state]);
+    
 
     const onDrop = (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -106,13 +119,19 @@ export default function NovaReclamação() {
     const handleSubmit = async () => {
         try {
             await buscarEndereco()
+            
+            if (!position) {
+                alert("Por favor, verifique o endereço ou aguarde a localização ser carregada.");
+                return;
+            }
 
             const [user, ok] = loadCurrentUserData();
             if (!ok) {
                 return
             }
+            
             let img = await uploadImage(formData.image, user.nome)
-
+            
             const reportData = {
                 user_id: user.id,
                 latitude: position[0],
@@ -124,7 +143,7 @@ export default function NovaReclamação() {
                 adress: `${formData.numero} ${formData.rua}, ${formData.cidade}, ${formData.estado}, ${formData.cep}, ${formData.pais}`,
                 prioridade: 0,
             };
-
+            
             let resp = await createReport(reportData)
 
             if (resp.error) {
@@ -177,6 +196,18 @@ export default function NovaReclamação() {
                         />
                     </Form.Group>
 
+                    <div style={{ marginBottom: 20 }}>
+                        <p className="text-primary-emphasis bold fs-5" style={{ marginBottom: 10 }}>Categoria</p>
+                        <SelectPicker
+                            className="border-primary fs-5"
+                            data={categories.map(
+                                item => ({ label: item, value: item })
+                            )}
+                            value={formData.categoria}
+                            onChange={(value) => handleChange('categoria', value)}
+                            style={{ resize: 'none', borderWidth: 2, width: '100%' }}
+                        />
+                    </div>
                     <Form.Group controlId="image" >
                         <Form.ControlLabel className='text-primary-emphasis bold fs-5'>Carregue uma imagem do local e/ou problema</Form.ControlLabel>
                         <div {...getRootProps()} style={{ display: 'flex', justifyContent: 'center', cursor: 'pointer' }}>
@@ -203,7 +234,7 @@ export default function NovaReclamação() {
 
                 <span class="border border-2 border-primary d-none d-md-block"></span>
 
-                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column'}}>
+                <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <h3 className='text-primary-emphasis mb-3'>Informações do local</h3>
 
                     <div style={{ width: "100%", height: 300 }}>

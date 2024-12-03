@@ -80,7 +80,7 @@ export default function AbaixoAssinados() {
 
   return (
     <BaseContainer flex={true} footer={false}>
-      <div style={{ maxHeight: 'calc(100vh - 92px)', display: 'flex', flexDirection: 'row', flex: 1 }}>
+      <div style={{ maxHeight: 'calc(100vh - 92px)',  display: 'flex', flexDirection: 'row', flex: 1}}>
         <section
           style={{
             padding: 15,
@@ -90,7 +90,7 @@ export default function AbaixoAssinados() {
             flex: 1
           }}
         >
-          <div style={{ flex: 1 }} >
+          <div >
             <h3 className='text-primary-emphasis mb-3'>Abaixo-Assinados Recentes</h3>
             <Input
               value={searchTerm}
@@ -104,7 +104,7 @@ export default function AbaixoAssinados() {
 
           <div
             style={{
-              flex: 6,
+              flex: 12,
               overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column'
@@ -149,7 +149,7 @@ export default function AbaixoAssinados() {
 
         <span class="border border-2 border-primary d-none d-md-block"></span>
 
-        <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column' }}
+        <section style={{ padding: 15, flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'scroll' }}
           className='d-none d-md-flex'
         >
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }} >

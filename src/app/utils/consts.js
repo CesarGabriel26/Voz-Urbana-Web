@@ -28,6 +28,29 @@ export const categories = [
     'Maus-Tratos a Animais', 'Desigualdade Social', 'Moradores de Rua',
     'Internet Pública', 'Documentação', 'Parques e Praças', 'Sinalização'
 ];
+export const PetitionsCategories = [
+    'Não Especificada',
+    'Direitos Humanos',
+    'Meio Ambiente',
+    'Educação',
+    'Saúde Pública',
+    'Bem-Estar Animal',
+    'Política e Governo',
+    'Economia e Trabalho',
+    'Tecnologia e Privacidade',
+    'Justiça e Segurança',
+    'Cultura e Lazer',
+    'Infraestrutura e Transporte',
+    'Direitos das Mulheres',
+    'Direitos das Crianças',
+    'Direitos dos Idosos',
+    'Direitos LGBTQIA+',
+    'Comunidade e Sociedade',
+    'Esporte e Juventude',
+    'Proteção ao Consumidor',
+    'Habitação e Urbanismo',
+    'Ciência e Pesquisa'
+];
 
 export const PrioritiesColors = [
     "hsl(207, 89.00%, 35.70%)",  // #0A62AC

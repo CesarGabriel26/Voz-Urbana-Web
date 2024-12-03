@@ -180,31 +180,46 @@ export const deletePetition = async (id) => {
 
 // Função para enviar uma imagem
 export const uploadImage = async (imageUri, userName) => {
-    const currentDate = new Date().toISOString().replace(/:/g, '-'); // Formata a data para evitar caracteres inválidos
-    const fileName = `${userName}_${currentDate}.jpg`; // Cria o nome do arquivo
+    const currentDate = new Date().toISOString().replace(/:/g, '-');
+    const fileName = `${userName}_${currentDate}.jpg`;
+
+    // Remove o prefixo base64 e cria um Blob
+    const base64Data = imageUri.split(',')[1];
+    const blob = base64ToBlob(base64Data, 'image/jpeg');
 
     const formData = new FormData();
-    formData.append('imagem', {
-        uri: imageUri,
-        type: 'image/jpeg', // ou o tipo correto da imagem
-        name: fileName, // Nome dinâmico
-    });
+    formData.append('imagem', blob, fileName); // Usa o Blob diretamente com o nome
 
     const response = await fetch(`${URL}/imagem/upload`, {
         method: 'POST',
-        headers: {
-        },
         body: formData,
     });
 
     if (!response.ok) {
-        // Lida com possíveis erros
         const errorResponse = await response.json();
         throw new Error(`Erro ao enviar imagem: ${errorResponse.error || response.statusText}`);
     }
 
     return response.json();
-}
+};
+
+// Função utilitária para converter base64 para Blob
+const base64ToBlob = (base64, mimeType) => {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let i = 0; i < byteCharacters.length; i += 512) {
+        const slice = byteCharacters.slice(i, i + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let j = 0; j < slice.length; j++) {
+            byteNumbers[j] = slice.charCodeAt(j);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: mimeType });
+};
 
 export const deleteImage = async (fileName) => {
     try {

@@ -115,7 +115,7 @@ export default function VerPeticaoWeb() {
                             <h3 className={`${textColorClass}`}>Status da Petição</h3>
                             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
                                 <Tag color={petition.status === 1 ? 'green' : 'red'}>
-                                    {petition.status === 1 ? 'Aceito' : 'Pendente'}
+                                    {petition.status === 1 ? 'Aceito' : petition.status === -1 ? 'Reprovado' : 'Pendente'}
                                 </Tag>
                                 <Tag style={{ marginLeft: 10, backgroundColor: prioridades[petition.prioridade].color, color: prioridades[petition.prioridade].textColor }}>
                                     Prioridade: {petition.prioridade}

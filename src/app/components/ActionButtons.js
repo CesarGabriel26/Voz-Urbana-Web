@@ -27,15 +27,20 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
     }, [currentUser.id, petition.user_id, petition.apoiadores]);
 
     return (
-        <div style={{ display: 'flex', gap: 25, flexWrap: 'wrap'}}>
+        <div style={{ display: 'flex', gap: 25, flexWrap: 'wrap' }}>
             {
                 petition ?
                     (
                         <>
                             {
+                                ((currentUser && currentUser.type === ADMIN_USER_TYPE) && (petition.status != 0)) ? <button className='btn btn-warning' onClick={handleRevoke}>Revogar</button> : <></>
+                            }
+                            {
+                                ((currentUser && currentUser.type === ADMIN_USER_TYPE) && (petition.status == 0)) ? <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button> : <></>
+                            }
+                            {
                                 (currentUser && currentUser.type === ADMIN_USER_TYPE && !petition.aberto) ? (
                                     <>
-                                        <button className='btn btn-danger' onClick={handleReprove}>Reprovar</button>
                                         <button className='btn btn-success' onClick={handleApprove}>Aprovar</button>
                                     </>
                                 ) : (
@@ -43,9 +48,6 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
                                         <button disabled={!podeAssinar} className='btn btn-primary' onClick={handlesign}> Assinar </button>
                                         {
                                             ((currentUser && currentUser.type === ADMIN_USER_TYPE) || (currentUser.id === petition.user_id)) ? <button className='btn btn-secondary' onClick={handleEnd}>Encerrar</button> : <></>
-                                        }
-                                        {
-                                            ((currentUser && currentUser.type === ADMIN_USER_TYPE) && (petition.aberto)) ? <button className='btn btn-warning' onClick={handleRevoke}>Revogar</button> : <></>
                                         }
                                     </>
                                 )
