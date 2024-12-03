@@ -26,7 +26,7 @@ export default function ActionButtons({ petition, reloadFunction, currentUser, b
 
     useEffect(() => {
         setPodeAssinar(
-            !currentUser.id === petition.user_id && !petition.apoiadores.includes(currentUser.id)
+            currentUser.id !== petition.user_id && !petition.apoiadores.includes(currentUser.id)
         );
     }, [currentUser.id, petition.user_id, petition.apoiadores]);
 
