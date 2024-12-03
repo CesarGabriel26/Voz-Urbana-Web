@@ -21,6 +21,7 @@ export default function VerPeticaoWeb() {
     const [user, setUser] = useState({});
     const [currentUser, setCurrentUser] = useState(null);
     const [theme, setTheme] = useState("light"); // Adicionado para monitorar o tema
+    const [priori, setPriori] = useState(0);
 
     const loadPetitionDetails = async () => {
         try {
@@ -33,6 +34,7 @@ export default function VerPeticaoWeb() {
 
                 if (petitionDetails.content) {
                     setPetition({ ...petitionDetails.content, ...remainingTime });
+                    setPriori(petitionDetails.content.prioridade)
 
                     const userData = await getUserById(petitionDetails.content.user_id);
                     setUser(userData.content);
@@ -156,7 +158,10 @@ export default function VerPeticaoWeb() {
                         </section>
 
                         {/* Action Buttons */}
-                        <ActionButtons petition={petition} reloadFunction={loadPetitionDetails} currentUser={currentUser} />
+                        <ActionButtons petition={petition} reloadFunction={loadPetitionDetails} currentUser={currentUser} 
+                            prioridade={priori}
+                            setPrioridade={setPriori}
+                        />
                     </Panel>
                 ) : (
                     !loading && !petition ? <p>Não foi possível carregar os detalhes da petição.</p> : null

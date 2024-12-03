@@ -159,8 +159,9 @@ export default function Perfil() {
                     {/* Seção de Configurações */}
                     <Divider className='text-dark-emphasis'>Configurações</Divider>
 
-                    <div className="row">
+                    <div className="row" style={{ display: 'flex', alignItems: 'center' }}>
                         {/* Tema */}
+
                         <div className="col-md-4">
                             <p className='text-dark-emphasis'><strong>Tema:</strong></p>
                             <SelectPicker
